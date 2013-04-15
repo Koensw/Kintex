@@ -1,0 +1,2 @@
+omtrek(a,b) = 2*a+2*b
+print omtrek(3.2,2.2) * omtrek(4,5)

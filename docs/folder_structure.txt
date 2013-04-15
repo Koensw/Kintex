@@ -1,0 +1,22 @@
+- backup:
+	(archives)
+- bin: 
+	(compiled binaries and shared objects files, ready to be installed)
+- build:
+	(temporary build files)
+- config:
+	(configuration files)
+- docs:
+	(documentation for yourself and others)
+- external
+	(external source files/libraries to use)
+- lib
+	(library files written in own language (.kin) or in c++)
+- src
+	(program for users)
+	- core
+		(core of the project)
+	- tokens
+		(other tokens like extra functions and operators to include)
+- test
+	(tests)
