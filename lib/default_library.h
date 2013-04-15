@@ -70,7 +70,7 @@ public:
 //print expression to std-out
 class PrintExpressionFunction: public kintex::FunctionBase{
 public:
-    PrintExpressionFunction(): kintex::FunctionBase("printexpr", 1) {}
+    PrintExpressionFunction(): kintex::FunctionBase("show", 1) {}
     PrintExpressionFunction *clone() const{ return new PrintExpressionFunction(*this); }
     
     kintex::Value operator()(std::vector<kintex::Expression>);

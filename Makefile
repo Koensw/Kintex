@@ -39,7 +39,7 @@ build/%.o : %.cpp
 -include $(SRCS:%.o=$(DEPDIR)/%.P)
 
 # PHONY's now only for linux!
-ifneq ($(OS),Windows_NT)
+#ifneq ($(OS),Windows_NT)
 .PHONY: clean
 .PHONY: install
 .PHONY: test
@@ -60,4 +60,4 @@ uninstall:
 test:
 	@bash test/tests.sh
 	
-endif
+#endif

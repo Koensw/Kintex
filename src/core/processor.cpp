@@ -92,9 +92,8 @@ Expression Processor::getNextExpression(bool allowEmpty){
 		char nextCharacter = nextChar();
 		while(nextCharacter==' ') nextCharacter = nextChar();
 	}
-	
 	//poll current top group for changes (if finish is notified, always finish until action)
-	else if(!groups.empty() && !finish) {
+	if(!groups.empty() && !finish) {
 		Group *g = groups.top();
 		finish = g->poll(*this);
 	}
