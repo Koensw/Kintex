@@ -1,6 +1,6 @@
 //define version information
 
-#define VERSION "1.1"
+#define VERSION "2.0"
 
 #include <iostream>
 #include <fstream>
