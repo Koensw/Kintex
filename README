@@ -1,11 +1,14 @@
-                 KINTEX 
-----------------------------------------
+KINTEX 
+======
 
-VERSIE: 1.1
+VERSIE: 2.0
 
-==============INTRODUCTION==============
+(c) 2013 Koen Wolters
 
-Kintex is a simple interpreter written in C++. It has the following features:
+INTRODUCTION
+------------
+
+Kintex is a simple interpreter written in C++. It has the following features (at the moment):
 * Basic operations like addition, subtraction etc.
 * Floating-Point support
 * Variables
@@ -16,19 +19,21 @@ Kintex is a simple interpreter written in C++. It has the following features:
 * Support for informative errors
 * Few builtin functions
 
-Kintex is a project for me to learn programming more advanced things.
+Kintex is a project for me to learn programming more advanced things and to learn something about compiler/interpreter logic.
 
-================DOCUMENTATION==============
+DOCUMENTATION
+-------------
 
 Documentation is not yet written!
 
-=======DEVELOPMENT AND KNOWN ISSUES========
-
+DEVELOPMENT AND KNOWN ISSUES
+----------------------------
 Read docs/plannen.doc
 
-==================INSTALL===============
+INSTALL
+-------
 
---->Linux<----
+###Linux
 Build requirements:
 - GCC (version 4.6 or higher) 
 - make
@@ -41,7 +46,7 @@ Commands to install:
 3. Execute 'sudo make install'
 4. Run 'kintex'
 
---->Windows<---
+###Windows
 Build requirements:
 - mingw (with GCC version 4.6 or higher)
 - sed
