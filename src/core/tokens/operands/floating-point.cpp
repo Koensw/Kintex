@@ -132,11 +132,11 @@ bool FloatingPoint::operator==(const Void &op) const{
 
 /* Lower then operators */
 bool FloatingPoint::operator<(const FloatingPoint &op) const{
-    if(op.val > val) return true;
+    if(op.val < val) return true;
     return false;
 }
 bool FloatingPoint::operator<(const Integer &op) const{
-    if(op.val > val) return true;
+    if(op.val < val) return true;
     return false;
 }
 bool FloatingPoint::operator<(const Void &op) const{

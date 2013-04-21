@@ -41,10 +41,10 @@ Build requirements:
 - binutils/coreutils
 
 Commands to install:
-1. Execute 'make'
-2. Optional: execute 'make test' (to run tests)
-3. Execute 'sudo make install'
-4. Run 'kintex'
+- Execute 'make'
+- Optional: execute 'make test' (to run tests)
+- Execute 'sudo make install'
+- Run 'kintex'
 
 ###Windows
 Build requirements:
@@ -52,5 +52,5 @@ Build requirements:
 - sed
 
 Commands to install:
-1. Execute 'mingw32-make'
-2. Run bin/kintex.exe
+- Execute 'mingw32-make'
+- Run bin/kintex.exe

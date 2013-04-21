@@ -9,7 +9,7 @@ else
 	df = $(DEPDIR)/$(*F)
 endif
 
-OPERATORS = add.o multiply.o subtract.o divide.o exponent.o set.o equality.o inequality.o
+OPERATORS = add.o multiply.o subtract.o divide.o exponent.o set.o equality.o inequality.o smaller.o bigger.o
 OPERANDS = integer.o floating-point.o void.o
 NAMES = variable.o variable_creator.o function.o function_creator.o instantiated_function.o
 CONTROL = parentheses.o statement.o brackets.o

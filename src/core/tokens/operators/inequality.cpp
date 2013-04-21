@@ -16,7 +16,6 @@ InequalityOperator *InequalityOperator::create(Processor &p){
 }
 
 Value InequalityOperator::result(){
-    //if right hand is float convert lefthand to float too
     if(*children[0]->result() == *children[1]->result()) return Integer(0, this);
     else return Integer(1, this);
 }

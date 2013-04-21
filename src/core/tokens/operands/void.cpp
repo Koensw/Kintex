@@ -38,5 +38,5 @@ bool Void::operator<(const Integer &op) const{
     return false;
 }
 bool Void::operator<(const Void &op) const{
-    return true;
+    return false;
 }

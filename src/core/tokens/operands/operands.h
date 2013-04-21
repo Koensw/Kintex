@@ -65,7 +65,7 @@ namespace kintex{
         bool operator==(const Integer &) const; 
         bool operator==(const FloatingPoint &) const; 
         bool operator==(const Void &) const; 
-        bool operator<(const Operand &op) const{ return op == *this; }
+        bool operator<(const Operand &op) const{ return op < *this; }
         bool operator<(const Integer &) const;
         bool operator<(const FloatingPoint &) const; 
         bool operator<(const Void &) const; 
@@ -122,7 +122,7 @@ namespace kintex{
         bool operator==(const Integer &) const; 
         bool operator==(const FloatingPoint &) const; 
         bool operator==(const Void &) const; 
-        bool operator<(const Operand &op) const{ return op == *this; }
+        bool operator<(const Operand &op) const{ return op < *this; }
         bool operator<(const Integer &) const;
         bool operator<(const FloatingPoint &) const; 
         bool operator<(const Void &) const; 
@@ -153,7 +153,7 @@ namespace kintex{
         bool operator==(const Integer &) const; 
         bool operator==(const FloatingPoint &) const; 
         bool operator==(const Void &) const; 
-        bool operator<(const Operand &op) const{ return op == *this; }
+        bool operator<(const Operand &op) const{ return op < *this; }
         bool operator<(const Integer &) const;
         bool operator<(const FloatingPoint &) const; 
         bool operator<(const Void &) const; 

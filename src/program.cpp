@@ -1,6 +1,7 @@
 //define version information
 
 #define VERSION "2.0"
+#define YEAR "2012-2013"
 
 #include <iostream>
 #include <fstream>
@@ -67,7 +68,7 @@ void addDefaultLibrary(TokenList &tokenList){
 //return tokenlist and operand level index (for custom functions)
 TokenList getDefaultTokenList(){
     /* define levels */
-	Level lowControlLevel(1); //TMP: not used at the moment!
+	Level lowControlLevel(1);
     Level coreFunctionLevel(2, Level::Assoc::RIGHT);
     Level baseFunctionLevel(3, Level::Assoc::RIGHT);
     Level setLevel(4, Level::Assoc::RIGHT);
@@ -85,6 +86,8 @@ TokenList getDefaultTokenList(){
 
     comparisionLevel.addToken(new EqualityOperator);
     comparisionLevel.addToken(new InequalityOperator);
+    comparisionLevel.addToken(new SmallerOperator);
+	comparisionLevel.addToken(new BiggerOperator);
     
     plusMinusLevel.addToken(new AddOperator);
     plusMinusLevel.addToken(new SubtractOperator);
@@ -175,7 +178,7 @@ void usage(){
 //version message
 void version(){
     std::cout << "|Kintex, an expression evaluator|" << std::endl;
-    std::cout << "|Copyright (c) 2012 Koen Wolters (license: GPL)|" << std::endl;
+    std::cout << "|Copyright (c) " << YEAR << " Koen Wolters (license: GPL)|" << std::endl;
 #ifndef _WIN32    
 	std::cout << "|Using version " << VERSION << " build with GCC " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__ << " on " <<  __DATE__ << " " << __TIME__ << "|" << std::endl; 
 #else
