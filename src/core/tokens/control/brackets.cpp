@@ -53,7 +53,7 @@ Value BracketsOperator::result(){
     returnVal = new Void;
     //execute all statements
     if(!children.empty()) {
-        //execute all statements (but not the last one)
+        //execute all statements
         for(std::vector<Expression>::iterator iter = children.begin(); iter < children.end(); ++iter){
             (*iter)->parent = this;
             (*iter)->result();
@@ -61,8 +61,7 @@ Value BracketsOperator::result(){
             if(returnVal->getParent() != nullptr) break;
         }
     }
-    if(returnVal->getParent() == nullptr) returnVal->parent = this;
-
+    if(returnVal->getParent() == nullptr) returnVal->parent = getParent();
     return returnVal;
 }
 

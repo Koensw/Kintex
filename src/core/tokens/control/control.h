@@ -59,7 +59,10 @@ namespace kintex{
         /* Default constructor */
         BracketsOperator(): Operator("{"), returnVal(new Void) {}
         /* Create constructor */
-        BracketsOperator(std::vector<Expression> statements): Operator("{"), returnVal(new Void) { children = statements; }
+        BracketsOperator(std::vector<Expression> statements): Operator("{"), returnVal(new Void) {
+			children = statements; 
+			if(children.empty()) children.push_back(Expression(new Void));
+		}
         /* Result operator */
         Value result();
 		/* Poll current brackets */
