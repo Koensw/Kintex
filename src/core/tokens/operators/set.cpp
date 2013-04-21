@@ -35,14 +35,18 @@ Value SetOperator::result(){
         //check if redefinition (not first definition)
         if(typeid(*children[0]) == typeid(InstantiatedFunction)){
             //cast children to instance
-            InstantiatedFunction &instance(dynamic_cast<InstantiatedFunction&>(*children[0]));
+             InstantiatedFunction &instance(dynamic_cast<InstantiatedFunction&>(*children[0]));
         
             //set new parameters if possible (parameters should be variables, else throw exception)
             for(size_t i=0;i<ret.arguments.size();++i){
                 if(typeid(instance.argumentValues[i]->getContents()) != typeid(Variable)) throw UnsupportedOperation(*children[0]);
                 ret.arguments[i] = instance.argumentValues[i];
             }
-        }
+        }else{
+			for(size_t i=0;i<ret.arguments.size();++i){
+                if(typeid(ret.arguments[i]->getContents()) != typeid(Variable)) throw UndefinedName(*children[0]);
+            }
+		}
         ret.expr = children[1];
         
         return Void(this);

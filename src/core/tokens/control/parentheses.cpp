@@ -35,7 +35,6 @@ ParenthesesOperator *ParenthesesOperator::create(Processor &p){
 }
 
 bool ParenthesesOperator::poll(Processor &p){
-	//std::cout << "PO -> poll: " << p.getChar() << std::endl;
 	return (p.getChar() == ')' || p.getChar() == ',');
 }
 

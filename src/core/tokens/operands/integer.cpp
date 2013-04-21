@@ -17,7 +17,7 @@ Integer *Integer::create(Processor &p){
     bool negative = false;
     //check if integer can be matched
     //no: return NULL;
-    if(!isdigit(p.getChar())  && !(!p.isExpressionLeft() && p.getChar() == '-' && isdigit(p.lookNextChar()))) return nullptr;
+    if(!isdigit(p.getChar()) && !(!p.isExpressionLeft() && p.getChar() == '-' && isdigit(p.lookNextChar()))) return nullptr;
     //yes create integer
     else{
         if(p.getChar() == '-'){

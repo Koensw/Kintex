@@ -2,7 +2,6 @@
 #include <cctype>
 
 #include "names.h"
-//FIXME: see line 47
 #include "../operators/operators.h"
 #include "../../processor.h"
 
@@ -11,67 +10,38 @@ using namespace kintex;
 /* Make a new function */
 Function *FunctionCreator::create(Processor &p){
     //create function
-    return nullptr;
-    /* std::string varName;
-    if(isalpha(p.getChar())){
-        varName += p.getChar();
+	std::string funcName;
+	if(isalpha(p.getChar())){
+        funcName += p.getChar();
+		Position pos = p.getPos();
         
         //loop until space or end of expression
         int i = 1;
-        while(isalpha(p.lookNextChar(i)) && FIXME: p.isExpressionLeft(i)){
-            varName += p.lookNextChar(i);
+        while(isalpha(p.lookNextChar(i))){
+            funcName += p.lookNextChar(i);
             ++i;
         }
-        int save=i;
         
         //skip spaces
-        while(isspace(p.lookNextChar(i)) && FIXME: p.isExpressionLeft(i)) ++i;
-        
-        //check for '(' and ')'
-        if(p.lookNextChar(i) == '('){
-            ++i;
-            while(p.lookNextChar(i) != ')'){
-                //stop if end of processing is reached
-                if(!p.isExpressionLeft(i)) return nullptr;
-                
-                ++i;
-            }
-        }else return nullptr;
-        ++i;
-        
-		return nullptr;
-        std::deque<Expression> args;
-        if(save - i != 2){
-            //calculate positions
-            int begin = (p.current-p.line->code.begin()) + save;
-            Line::Positions pos = std::make_pair(begin, begin + (i - save));
-            
-            //build argument processor
-            Processor proc(p.getTokenList(), p.line, pos);
-            
-            //FIXME: process from left to right instead of right to left!
-            //get variables
-            Expression expr = proc.getNextExpression();
-            if(typeid(expr->getContents()) != typeid(Variable)) return nullptr;
-            args.push_back(expr);
-            while(proc.isPrevExpressionLeft()){
-                Expression expr = proc.getPrevExpression();
-                if(typeid(expr->getContents()) != typeid(Variable)) return nullptr;
-                args.push_front(expr);
-            }
-            
-            //finish processor
-            proc.finish();  
-        }
-        //goto current token
+        while(isspace(p.lookNextChar(i))) ++i;
+		
+		//check if it is a function (TODO: functions start with '(' ??)
+        if(p.lookNextChar(i) != '(') return nullptr;
+			  
+        //skip tokens
         while(i--!=0) p.nextChar();
         
-        //built token and return it
-        Function *func = new Function(varName, std::vector<Expression>(args.begin(), args.end())); 
+		//read arguments
+		std::vector<Expression> args;
+		while(true){
+			Expression expr = p.getNextExpression(pos, true);
+			if(typeid(expr->getContents()) == typeid(Void)) break; 
+			args.push_back(expr);
+		}
+			  
+        //built token
+        Function *func = new Function(funcName, args); 
         return func;
-		
     }
-    
-    //if creation was not succesfull return nullptr
-    return nullptr;*/
+    return nullptr;
 }

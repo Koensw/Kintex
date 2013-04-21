@@ -140,7 +140,7 @@ namespace kintex{
             std::vector<Expression>::iterator argValIter = values.begin();
             for(;argIter < arguments.end(); ++argIter, ++argValIter){
                 //cast token to name (always succeed, because it is a variable)
-                Name &op(dynamic_cast<Name&>((**argIter).getContents()));
+				Name &op(dynamic_cast<Name&>((**argIter).getContents()));
                 
                 //evaluate expression and assign result to vars 
                 op = *(*argValIter)->result();

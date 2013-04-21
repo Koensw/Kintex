@@ -61,7 +61,7 @@ void addDefaultLibrary(TokenList &tokenList){
     tokenList.getLevel(2).addToken(new ReturnFunction);
     tokenList.getLevel(1).addToken(new IfFunction);
     tokenList.getLevel(1).addToken(new WhileFunction);
-    tokenList.getLevel(9).addToken(new SquareRootFunction);
+    tokenList.getLevel(10).addTokenFront(new SquareRootFunction);
 }
 
 //return tokenlist and operand level index (for custom functions)

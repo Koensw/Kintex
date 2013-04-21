@@ -50,10 +50,12 @@ namespace kintex{
             /** Return the level index where children should be added 
              * - return zero level (default) to not add to a level (FIXME: no special zero-level)
              * (normally used only in creators)
+			 * TODO: REMAKE
              */
             virtual int getAddLevelIndex() const { return 0; }
             /** Return the contents (child) of a token, if the token itself is not really part of the expression
              * (normally used in parentheses and brackets)
+			 * FIXME: NEEDED??
              */
             virtual Token &getContents() { return *this; }
             /** Returns the name of the class

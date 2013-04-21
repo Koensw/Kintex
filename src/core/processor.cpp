@@ -51,8 +51,7 @@ Expression Processor::getNextStatement(){
 	sg->before(*this);
 	
 	//read expression
-	Position pos;
-	pos.pos = 0; 
+	Position pos = getPos();
 	Expression expr = getNextExpression(pos, true, true);
 	
 	//do actions after
@@ -154,6 +153,8 @@ Expression Processor::getNextExpression(Position pos, bool allowEmpty, bool spec
 						if(tokenExpr->children.front()->line.pos.first < tokenExpr->line.pos.first) tokenExpr->line.pos.first = tokenExpr->children.front()->line.pos.first;
 						if(tokenExpr->children.back()->line.pos.second > tokenExpr->line.pos.second) tokenExpr->line.pos.second = tokenExpr->children.back()->line.pos.second;
 					}
+					while(tokenExpr->line.pos.first < tokenExpr->line.pos.second && isspace((*line.code)[tokenExpr->line.pos.second-1])) --tokenExpr->line.pos.second;
+					
                     //add expression to previous expression stack
 					Position p;
 					p.pos = saveCurrent;

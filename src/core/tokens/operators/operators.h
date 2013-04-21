@@ -31,9 +31,9 @@ namespace kintex{
     class SubtractOperator: public BinaryOperator{
     public:
         /* Default constructor */
-        SubtractOperator(): BinaryOperator("-", Expression(new Void), Expression(new Void)) {}
+        SubtractOperator(): BinaryOperator("-", Expression(new Void), Expression(new Void)){}
         /* Create constructor */
-        SubtractOperator(Expression lhs, Expression rhs): BinaryOperator("-", lhs, rhs) {}
+        SubtractOperator(Expression lhs, Expression rhs): BinaryOperator("-", lhs, rhs){}
         /* Result operator */
         Value result();
         /* Clone operator */

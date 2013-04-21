@@ -15,15 +15,10 @@ Variable *VariableCreator::create(Processor &p){
         
         //loop until space or end of expression
         int i = 1;
-        while(isalpha(p.lookNextChar(i)) /*&& FIXME: p.isExpressionLeft(i)*/){
+        while(isalpha(p.lookNextChar(i))){
             varName += p.lookNextChar(i);
             ++i;
         }
-        
-        //check if not meaned as function
-        int j=i;
-        while(isspace(p.lookNextChar(j))) ++j;
-        if(p.lookNextChar(j) == '(') return nullptr;
         
         //skip tokens
         while(i--!=0) p.nextChar();

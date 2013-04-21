@@ -75,25 +75,23 @@ namespace kintex{
 			return line.code->substr(current, length); 
         }
         
+        /** Returns current position */
         Position getPos() const{
 			Position p;
 			p.pos = current;
 			return p;
 		}
         
-        /** Converts iterator to correct expression */
-		Expression getExpression(std::multimap<Position, Expression>::iterator, bool allowEmpty = false);
-        
         /** Get next and previous expressions (and check if expressions left), now support parents */
         Expression getNextExpression(Position pos, bool allowEmpty = false, bool spec = false);
         Expression getPrevExpression(Position pos, bool allowEmpty = false);
-        
-        /** Check if expressions left */
-        bool isExpressionLeft() const{
-			return !prevExpr.empty();
+		
+		/** Check if there is an expression on the stack */
+		bool isExpressionLeft() { 
+			return !prevExpr.empty(); 
 		}
 		
-		/** Register and unregister groups for advanced analys */
+		/** Register and unregister groups for advanced analysis */
 		//register a group
 		void registerGroup(Group *g){
 			groups.push(g);  
@@ -115,6 +113,9 @@ namespace kintex{
 		void resetLevel() { level = tokenList.begin(); }
         
     private:
+		/** Converts iterator to correct expression */
+		Expression getExpression(std::multimap<Position, Expression>::iterator, bool allowEmpty = false);
+		
         /* List of tokens and iterator */
         TokenList &tokenList;
         TokenList::iterator level;

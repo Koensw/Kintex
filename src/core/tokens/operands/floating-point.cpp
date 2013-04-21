@@ -17,7 +17,7 @@ FloatingPoint *FloatingPoint::create(Processor &p){
     bool negative = false;
     //check if floatingpoint can be matched
     //no: return NULL;
-    if(isdigit(p.getChar())  || (!p.isExpressionLeft() && p.getChar() == '-' && isdigit(p.lookNextChar()))){
+    if(isdigit(p.getChar()) || (p.isExpressionLeft() && p.getChar() == '-' && isdigit(p.lookNextChar()))){
         //it is a integer <-- check if it is a floating point to
         int cnt = 1;
         while(isdigit(p.lookNextChar(cnt))) cnt++;
@@ -25,7 +25,7 @@ FloatingPoint *FloatingPoint::create(Processor &p){
         if(p.lookNextChar(cnt) != '.') return nullptr;
 	
         //check if negative
-	if(p.getChar() == '-'){
+		if(p.getChar() == '-'){
             p.nextChar();
             negative = true;
         }

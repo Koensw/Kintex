@@ -24,6 +24,7 @@ Value ExponentOperator::result(){
     //if right hand is float convert lefthand to float too
     Value ret = children[0]->result();
     Value result = children[1]->result();
+	//FIXME: support negative exponents
     if(typeid(*result) == typeid(FloatingPoint) && typeid(*ret) == typeid(Integer)){
         ret = FloatingPoint(dynamic_cast<Integer&>(*ret));
     }
