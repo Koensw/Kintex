@@ -8,10 +8,11 @@ AddOperator *AddOperator::create(Processor &p){
     //check if match:
     //no: return NULL
     if(p.getChar() != op[0]) return nullptr;
+	Position pos = p.getPos();
     
     //yes: goto next char and create the operator
     p.nextChar();
-    return new AddOperator(p.getPrevExpression(), p.getNextExpression());
+    return new AddOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
 Value AddOperator::result(){

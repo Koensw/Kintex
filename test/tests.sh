@@ -2,14 +2,14 @@
 
 # FUNCTION TO RUN TESTS
 function testFile {
-    if [ `bin/kintex $1 2> /dev/null` = "$2" ]; then
+    if [ "`bin/kintex $1 2>&1`" = "$2" ]; then
         echo "->succesful!"
     else
         echo "->FAILED!"
     fi
 }
 function testCommand {
-    if [ `bin/kintex -c $1 2> /dev/null` = "$2" ]; then
+    if [ "`bin/kintex -c $1 2>&1`" = "$2" ]; then
         echo "->succesful!"
     else
         echo "->FAILED!"

@@ -14,6 +14,8 @@ ParenthesesOperator *ParenthesesOperator::create(Processor &p){
     //check if match
     //no: return;
     if(p.getChar() != '(' && p.getChar() != ',') return nullptr;
+	Position pos = p.getPos();
+	
     //yes: read in parentheses
 	p.nextChar();
 	
@@ -22,7 +24,7 @@ ParenthesesOperator *ParenthesesOperator::create(Processor &p){
 	save = p.getLevel();
 	p.resetLevel();
 	
-	Expression expr = p.getNextExpression(true);
+	Expression expr = p.getNextExpression(pos, true);
 	
 	//skip ")" not ,
 	if(p.getChar() == ')') p.nextChar();	

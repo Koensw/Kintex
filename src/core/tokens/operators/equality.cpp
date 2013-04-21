@@ -8,10 +8,11 @@ EqualityOperator *EqualityOperator::create(Processor &p){
     //check if match:
     //no: return NULL
     if(p.getChar() != op[0] || p.lookNextChar(1) != op[1]) return nullptr;
-
+	Position pos = p.getPos();
+	
     //yes: goto next char and create the operator
     p.nextChar();p.nextChar();
-    return new EqualityOperator(p.getPrevExpression(), p.getNextExpression());
+    return new EqualityOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
 Value EqualityOperator::result(){

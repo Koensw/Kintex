@@ -21,6 +21,13 @@ namespace kintex{
     class Expression;
     
     //Processor
+	struct Position{
+		size_t pos;
+		bool operator<(const Position p2) const{
+			return pos < p2.pos;
+		}
+	};
+	
     class Processor{
     public:
         /* all syntax errors are friends */
@@ -68,9 +75,18 @@ namespace kintex{
 			return line.code->substr(current, length); 
         }
         
+        Position getPos() const{
+			Position p;
+			p.pos = current;
+			return p;
+		}
+        
+        /** Converts iterator to correct expression */
+		Expression getExpression(std::multimap<Position, Expression>::iterator, bool allowEmpty = false);
+        
         /** Get next and previous expressions (and check if expressions left), now support parents */
-        Expression getNextExpression(bool allowEmpty = false);
-        Expression getPrevExpression(bool allowEmpty = false);
+        Expression getNextExpression(Position pos, bool allowEmpty = false, bool spec = false);
+        Expression getPrevExpression(Position pos, bool allowEmpty = false);
         
         /** Check if expressions left */
         bool isExpressionLeft() const{
@@ -104,8 +120,7 @@ namespace kintex{
         TokenList::iterator level;
         
         /* List of not assigned expressions */
-		size_t depth;
-        std::multimap<size_t, Expression> prevExpr;
+        std::multimap<Position, Expression> prevExpr;
 		
 		/* Flow control */
 		StatementGroup *sg;

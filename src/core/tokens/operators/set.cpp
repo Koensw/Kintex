@@ -12,10 +12,11 @@ SetOperator *SetOperator::create(Processor &p){
     //check if match:
     //no: return NULL
     if(p.getChar() != op[0]) return nullptr;
-
+	Position pos = p.getPos();
+	
     //yes: goto next char and create the operator
     p.nextChar();
-    return new SetOperator(p.getPrevExpression(), p.getNextExpression());
+    return new SetOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
 //FIXME: support reassign of other type of vars

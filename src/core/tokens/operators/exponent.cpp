@@ -11,12 +11,13 @@ ExponentOperator *ExponentOperator::create(Processor &p){
     //check if match:
     //no: return NULL
     if(p.getChar() != op[0]) return nullptr;
-
+	Position pos = p.getPos();
+	
     //yes: goto next char and create the operator
     p.nextChar();
 
     //build new operator
-    return new ExponentOperator(p.getPrevExpression(), p.getNextExpression());
+    return new ExponentOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
 Value ExponentOperator::result(){

@@ -13,6 +13,8 @@ BracketsOperator *BracketsOperator::create(Processor &p){
 	//check if match
     //no: return;
     if(p.getChar() != '{') return nullptr;
+	Position pos = p.getPos();
+	
     //yes: read in parentheses
 	p.nextChar();
 	
@@ -23,7 +25,7 @@ BracketsOperator *BracketsOperator::create(Processor &p){
 	
 	std::vector<Expression> stats;
 	while(true){
-		Expression expr = p.getNextExpression(true);
+		Expression expr = p.getNextExpression(pos, true);
 		stats.push_back(expr);
 		if(p.getChar() == '}') {
 			p.nextChar();

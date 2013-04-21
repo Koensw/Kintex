@@ -22,7 +22,7 @@ using std::vector;
 
 /* Default constructor (FIXME: move constructor) */
 Processor::Processor(TokenList &list, StatementGroup *g, std::string code, std::string file):
-tokenList(list), level(list.begin()), depth(1), sg(g), finish(false) {
+tokenList(list), level(list.begin()), sg(g), finish(false) {
 	//initialize code
 	line.file = file;
 	line.code = std::shared_ptr<std::string>(new std::string(code));
@@ -51,7 +51,9 @@ Expression Processor::getNextStatement(){
 	sg->before(*this);
 	
 	//read expression
-	Expression expr = getNextExpression(true);
+	Position pos;
+	pos.pos = 0; 
+	Expression expr = getNextExpression(pos, true, true);
 	
 	//do actions after
 	sg->after(*this);
@@ -60,32 +62,34 @@ Expression Processor::getNextStatement(){
 	unregisterGroup();
 	
 	//check if things left
-	if(isExpressionLeft()) throw LeftToken(*this, getPrevExpression(true));
+	if(isExpressionLeft()) throw LeftToken(*this, getExpression(prevExpr.begin()));
 	
 	//return expression
 	return expr;
 }
 
-/* Next expression read */
-Expression Processor::getNextExpression(bool allowEmpty){
-	++depth;
-	
-	//check if expression is already read
-	std::map<size_t, Expression>::iterator iter = prevExpr.upper_bound(depth);
-	if(iter!=prevExpr.end()){
-		for(auto iter2 = prevExpr.begin(); iter2!= prevExpr.end(); ++iter2){
-			std::cout << iter2->first << " - " << iter2->second << std::endl;
-		}
-		std::cout << "-- " << iter->first << " - " << iter->second << std::endl;
-		Expression returnExpr = iter->second;
-		prevExpr.erase(iter);
-		
-		//loop through all children and set parent
-		for(std::vector<Expression>::iterator child_iter = returnExpr->children.begin(); child_iter < returnExpr->children.end(); ++child_iter){
-			(*child_iter)->parent = &*returnExpr;
-		} 
-		return returnExpr;
+/* Get expression from iterator */
+Expression Processor::getExpression(std::map<Position, Expression>::iterator iter, bool allowEmpty){
+	if(iter == prevExpr.end()){
+		if(allowEmpty) return Expression(new Void());
+        else throw MissingToken(*this);
 	}
+	
+	Expression returnExpr = iter->second;
+	prevExpr.erase(iter);
+		
+	//loop through all children and set parent
+	for(std::vector<Expression>::iterator child_iter = returnExpr->children.begin(); child_iter < returnExpr->children.end(); ++child_iter){
+		(*child_iter)->parent = &*returnExpr;
+	} 
+	return returnExpr;
+}
+
+/* Next expression read */
+Expression Processor::getNextExpression(Position pos, bool allowEmpty, bool spec){
+	//check if expression is already read (return then)
+	std::map<Position, Expression>::iterator iter = prevExpr.lower_bound(pos);
+	if(!spec && iter!=prevExpr.end()) return getExpression(iter, allowEmpty);
 	
 	//pass all spaces
 	if(getChar()==' '){
@@ -100,8 +104,9 @@ Expression Processor::getNextExpression(bool allowEmpty){
 	
 	//finishing until action is taken
 	if(finish){
-		--depth;
-		return getPrevExpression(allowEmpty);
+		//set to return first next expression
+		std::map<Position, Expression>::iterator iter = prevExpr.lower_bound(pos);
+		return getExpression(iter, allowEmpty);
 	}
 	
     //save level and begin with token under
@@ -114,7 +119,9 @@ Expression Processor::getNextExpression(bool allowEmpty){
             || (level->getAssoc() == Level::Assoc::RIGHT && level->getIndex() >= currentLevel->getIndex())){
             for(Level::iterator iter = level->begin(); iter < level->end(); ++iter){
 		        //DEBUG:
-		        //std::cout << " *> " << getChar() << " - " << typeid(**iter).name() << std::endl;
+		        //char cur = getChar();
+				//std::cout << " *> " << cur << " - " << typeid(**iter).name() << std::endl; 
+				
 		        //save current positions
 		        size_t saveCurrent = current;
 
@@ -123,7 +130,7 @@ Expression Processor::getNextExpression(bool allowEmpty){
                 tok = (*iter)->create(*this);
 
                 //wait until instance succeeded
-                if(tok != nullptr){
+                if(tok != nullptr){					
 					//build new expression or get old if operand points to the same
 					Expression tokenExpr;
 					if(tok == &(**iter)) tokenExpr = *iter; //get old expression if the same (else memory errors!)
@@ -148,12 +155,13 @@ Expression Processor::getNextExpression(bool allowEmpty){
 						if(tokenExpr->children.back()->line.pos.second > tokenExpr->line.pos.second) tokenExpr->line.pos.second = tokenExpr->children.back()->line.pos.second;
 					}
                     //add expression to previous expression stack
-                    prevExpr.insert(std::make_pair(depth, tokenExpr));
+					Position p;
+					p.pos = saveCurrent;
+                    prevExpr.insert(std::make_pair(p, tokenExpr));
 					
                     //reset level and try to match next token that has a higher precedency
                     level = currentLevel;
-					Expression ret = getNextExpression(allowEmpty);
-					--depth;
+					Expression ret = getNextExpression(pos, allowEmpty, true);
 					return ret;
                 }
             }
@@ -170,32 +178,23 @@ Expression Processor::getNextExpression(bool allowEmpty){
 
     //reset level and return previous expression if nothing higher can be matched 
     level = currentLevel;
-	--depth;
-    return getPrevExpression(allowEmpty);
+	iter = prevExpr.lower_bound(pos);
+	return getExpression(iter, allowEmpty);
 }
 
 /* Prev expression read */
-Expression Processor::getPrevExpression(bool allowEmpty){
+Expression Processor::getPrevExpression(Position pos, bool allowEmpty){
 	//search for expression
-	std::map<size_t, Expression>::iterator iter = prevExpr.begin();
+	std::map<Position, Expression>::iterator iter = prevExpr.lower_bound(pos);
 	
     //check if there is a token, else throw an exception
-    if(iter == prevExpr.end()){
+    if(iter == prevExpr.begin()){
 		if(allowEmpty) return Expression(new Void());
         else throw MissingToken(*this);
     }
+    --iter;
 	
-	//get token and erase it from stack
-	Expression returnExpr = iter->second;
-	prevExpr.erase(iter);
-  	
-    //loop through all children and set parent
-    for(std::vector<Expression>::iterator child_iter = returnExpr->children.begin(); child_iter < returnExpr->children.end(); ++child_iter){
-        (*child_iter)->parent = &*returnExpr;
-    } 
-
-	//return expression
-    return returnExpr;
+	return getExpression(iter, allowEmpty);
 }
 
 /*

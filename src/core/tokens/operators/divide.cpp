@@ -10,12 +10,13 @@ DivideOperator *DivideOperator::create(Processor &p){
     //check if match:
     //no: return NULL
     if(p.getChar() != op[0]) return nullptr;
-
+	Position pos = p.getPos();
+	
     //yes: goto next char
     p.nextChar();
     
     //create the operator
-    return new DivideOperator(p.getPrevExpression(), p.getNextExpression());
+    return new DivideOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
 Value DivideOperator::result(){
