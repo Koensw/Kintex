@@ -18,7 +18,6 @@ SubtractOperator *SubtractOperator::create(Processor &p){
     p.nextChar();
 	
     //build new operator
-	//Expression prev = p.getPrevExpression(pos, true);
     return new SubtractOperator(prev, p.getNextExpression(pos));
 }
 

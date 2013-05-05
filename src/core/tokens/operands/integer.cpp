@@ -13,7 +13,7 @@ using namespace kintex;
 
 /* Make a new integer from a string */
 Integer *Integer::create(Processor &p){
-    int val;
+    mpz_class val;
     bool negative = false;
     //check if integer can be matched
     //no: return NULL;
@@ -45,7 +45,7 @@ Operand &Integer::operator+=(Integer &op){
     return op;
 }
 Operand &Integer::operator+=(FloatingPoint &op){
-    op.val += val;
+    op.val += val.get_d();
     return op;
 }
 /* Minus operators */
@@ -54,7 +54,7 @@ Operand &Integer::operator-=(Integer &op){
     return op;
 }
 Operand &Integer::operator-=(FloatingPoint &op){
-    op.val -= val;
+    op.val -= val.get_d();
     return op;
 }
 /* Multiply operators */
@@ -63,7 +63,7 @@ Operand &Integer::operator*=(Integer &op){
     return op;
 }
 Operand &Integer::operator*=(FloatingPoint &op){
-    op.val *= val;
+    op.val *= val.get_d();
     return op;
 }
 /* Divide operators */
@@ -72,22 +72,28 @@ Operand &Integer::operator/=(Integer &op){
     return op;
 }
 Operand &Integer::operator/=(FloatingPoint &op){
-    op.val /= val;
+    op.val /= val.get_d();
     return op;
 }
 /* Power operators */
 Operand &Integer::pow(Integer &op){
-    op.val = std::pow(op.val, val);
+   	mpz_powm(op.val.get_mpz_t(), op.val.get_mpz_t(), val.get_mpz_t(), INTEGER_MAX.get_mpz_t()); 
+   	//std::pow(op.val, val);
     return op;
 }
 Operand &Integer::pow(FloatingPoint &op){
-    op.val = std::pow(op.val, val);
+    op.val = std::pow(op.val, val.get_d());
+    return op;
+}
+/* Modulo operator */
+Operand &Integer::mod(Integer &op){
+   	mpz_mod(op.val.get_mpz_t(), op.val.get_mpz_t(), val.get_mpz_t());
     return op;
 }
 
 /* Special set operator */
 Operand &Integer::operator=(FloatingPoint &op){
-    op.val = val;
+    op.val = val.get_d();
     return op;
 }
 Operand &Integer::operator=(Integer &op){

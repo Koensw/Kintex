@@ -32,14 +32,16 @@ Value DivideOperator::result(){
 
     //if both are integers calculate a check too and return that check if the normal answer is not correct
     if(typeid(*rightResult) == typeid(Integer) && typeid(*leftResult) == typeid(Integer)){
-        Value checkLeft = FloatingPoint(dynamic_cast<Integer&>(*leftResult));
-        Value checkRight = FloatingPoint(dynamic_cast<Integer&>(*rightResult));
+    	if(children[0]->result()->mod(*rightResult) == Integer(0)){
+    		*leftResult /= *rightResult;
+    		return leftResult;
+    	}else{
+	        Value checkLeft = FloatingPoint(dynamic_cast<Integer&>(*leftResult));
+	        Value checkRight = FloatingPoint(dynamic_cast<Integer&>(*rightResult));
         
-        *checkLeft /= *checkRight;
-        *leftResult /= *rightResult;
-        //if same return integer, else floatingpoint
-        if(*checkLeft == *leftResult){ return leftResult; }
-        else return checkLeft;
+    	    *checkLeft /= *checkRight;
+        	return checkLeft;
+        }
     }else{
         //calculate
         *leftResult /= *rightResult;

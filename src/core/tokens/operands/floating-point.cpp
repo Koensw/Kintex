@@ -17,7 +17,7 @@ FloatingPoint *FloatingPoint::create(Processor &p){
     bool negative = false;
     //check if floatingpoint can be matched
     //no: return NULL;
-    if(isdigit(p.getChar()) || (p.isExpressionLeft() && p.getChar() == '-' && isdigit(p.lookNextChar()))){
+    if(isdigit(p.getChar()) || (!p.isExpressionLeft() && p.getChar() == '-' && isdigit(p.lookNextChar()))){
         //it is a integer <-- check if it is a floating point to
         int cnt = 1;
         while(isdigit(p.lookNextChar(cnt))) cnt++;
@@ -65,7 +65,7 @@ Operand &FloatingPoint::operator+=(FloatingPoint &op){
     return op;
 }
 Operand &FloatingPoint::operator+=(Integer &op){
-    op.val += val;
+    op.val += mpz_class(val);
     return op;
 }
 /* Minus operators */
@@ -74,7 +74,7 @@ Operand &FloatingPoint::operator-=(FloatingPoint &op){
     return op;
 }
 Operand &FloatingPoint::operator-=(Integer &op){
-    op.val -= val;
+    op.val -= mpz_class(val);
     return op;
 }
 /* Multiply operators */
@@ -83,7 +83,7 @@ Operand &FloatingPoint::operator*=(FloatingPoint &op){
     return op;
 }
 Operand &FloatingPoint::operator*=(Integer &op){
-    op.val *= val;
+    op.val *= mpz_class(val);
     return op;
 }
 /* Divide operators */
@@ -93,12 +93,12 @@ Operand &FloatingPoint::operator/=(FloatingPoint &op){
 }
 Operand &FloatingPoint::operator/=(Integer &op){
     //always goto floating point, by casting to floatingpoint
-    op.val /= val;
+    op.val /= mpz_class(val);
     return op;
 }
 /* Power operators */
 Operand &FloatingPoint::pow(Integer &op){
-    op.val = std::pow(op.val, val);
+	mpz_powm(op.val.get_mpz_t(), op.val.get_mpz_t(), mpz_class(val).get_mpz_t(), INTEGER_MAX.get_mpz_t()); 
     return op;
 }
 Operand &FloatingPoint::pow(FloatingPoint &op){

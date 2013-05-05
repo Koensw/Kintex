@@ -1,6 +1,7 @@
 #ifndef KINTEX_OPERANDS_H
 #define KINTEX_OPERANDS_H
 
+#include <gmpxx.h>
 #include <iostream>
 #include <sstream>
 
@@ -17,15 +18,21 @@ namespace kintex{
      * - call will be correctly resolved
      * - return operand instead of this in dispatched function
      */
-    
+     
+     
+	//MAX VALUE (always MOD with this number)
+    const mpz_class INTEGER_MAX("10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+   
     class Integer: public Number{
         friend class FloatingPoint;
         friend class Variable;
     public:
         /* Default constructor */
         Integer(): val(0) {}
-        /* Create constructor */
+        /* FIXME: DEPRECATED create constructor */
         Integer(int value, Token *givenParent = nullptr): val(value) {parent = givenParent;}
+        /* Create constructor */
+        Integer(mpz_class value, Token *givenParent = nullptr): val(value) {parent = givenParent;}
         /* Display function */
         std::ostream &display(std::ostream &out) const{ 
             out << val;
@@ -54,6 +61,8 @@ namespace kintex{
         Operand &pow(Operand &op) { op.pow(*this); return *this; }
         Operand &pow(Integer &);
         Operand &pow(FloatingPoint &);
+        Operand &mod(Operand &op) { op.mod(*this); return *this; }
+        Operand &mod(Integer &);
         
         /* Special set operator */
         Operand &operator=(Operand &op){ op = *this; return *this;}
@@ -70,7 +79,7 @@ namespace kintex{
         bool operator<(const FloatingPoint &) const; 
         bool operator<(const Void &) const; 
     private:      
-        int val;
+        mpz_class val;
     };
     
     class FloatingPoint: public Number{
@@ -80,7 +89,7 @@ namespace kintex{
         /* Default constructor */
         FloatingPoint(): val(0) {}
         /* Special conversion constructor */
-        FloatingPoint(Integer i): val(i.val) {}
+        FloatingPoint(Integer i): val(i.val.get_d()) {}
         /* Create constructor */
         FloatingPoint(double value): val(value) {}
         /* Display function */
@@ -111,6 +120,7 @@ namespace kintex{
         Operand &pow(Operand &op) { op.pow(*this); return *this; }
         Operand &pow(Integer &);
         Operand &pow(FloatingPoint &);
+        Operand &mod(Operand &op) { op.mod(*this); return *this; }
         
         /* Special set operator */
         Operand &operator=(Operand &op){ op = *this; return *this;}

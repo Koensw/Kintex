@@ -39,6 +39,7 @@ Build requirements:
 - make
 - sed
 - binutils/coreutils
+- GMP
 
 Commands to install:
 - Execute 'make'
@@ -50,6 +51,7 @@ Commands to install:
 Build requirements:
 - mingw (with GCC version 4.6 or higher)
 - sed
+- GMP (CURRENTLY AN ISSUE!)
 
 Commands to install:
 - Execute 'mingw32-make'

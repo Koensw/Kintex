@@ -64,7 +64,11 @@ Value PrintExpressionFunction::operator()(std::vector<Expression> values){
  *  Returns: square root
  */
 Value SquareRootFunction::operator()(std::vector<Expression> values){
-    Value result(values[0]->result());
+	Value result(values[0]->result());
+	if(typeid(*result) == typeid(Integer)){
+		result = FloatingPoint(dynamic_cast<Integer&>(*result));
+	}
+
     Value power(FloatingPoint(0.5));
     result->pow(*power);
     return result;

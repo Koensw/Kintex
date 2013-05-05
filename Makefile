@@ -2,7 +2,8 @@ VPATH = src:src/core:src/core/tokens/operators:src/core/tokens/operands/:src/cor
 DEPDIR = build
 
 ifneq ($(OS),Windows_NT)
-	CXXFLAGS = -Wall -pedantic -g -std=c++0x
+	CXXFLAGS = -Wall -pedantic -g -std=c++11 -lgmp -lgmpxx
+	
 	df = $(DEPDIR)/$(*F)
 else
 	CXXFLAGS = -Wall -pedantic -g -std=c++0x

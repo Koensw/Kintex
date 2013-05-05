@@ -48,6 +48,11 @@ namespace kintex{
         virtual Operand &pow(Operand &op) {throw UnsupportedOperation(*this);}
         virtual Operand &pow(Integer &) {throw UnsupportedOperation(*this);}
         virtual Operand &pow(FloatingPoint &) {throw UnsupportedOperation(*this);}
+        /* Modulo operator */
+        /* --> DISPATCHING OPERATOR <-- */
+        virtual Operand &mod(Operand &op) {throw UnsupportedOperation(*this);}
+        virtual Operand &mod(Integer &) {throw UnsupportedOperation(*this);}
+        virtual Operand &mod(FloatingPoint &) {throw UnsupportedOperation(*this);}
         
         /* Equality operator */
         /* --> DISPATCHING OPERATOR <-- */
