@@ -16,6 +16,7 @@ namespace kintex{
     class Operand;
     class Processor;
     class Level;
+    class Value;
 
     class Token{
     	friend class Statement;
@@ -46,13 +47,6 @@ namespace kintex{
             */
             virtual Token *create(Processor&) = 0;
             
-            /* Special functions that should be redeclared when other behaviour is expected */
-            /** Return the level index where children should be added 
-             * - return zero level (default) to not add to a level (FIXME: no special zero-level)
-             * (normally used only in creators)
-			 * TODO: REMAKE
-             */
-            virtual int getAddLevelIndex() const { return 0; }
             /** Return the contents (child) of a token, if the token itself is not really part of the expression
              * (normally used in parentheses and brackets)
 			 * FIXME: NEEDED??

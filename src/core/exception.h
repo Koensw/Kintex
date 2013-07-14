@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include <typeinfo>
+
 #include "processor.h"
 #include "interpreter.h"
 
@@ -21,10 +22,20 @@ namespace kintex{
         UnreachableException() {}
         ~UnreachableException() throw() {}
         
-        /* Derive this to generate error message */
+        /* Generate error message */
         const char *what() const throw(){
-			//FIXME; call critical error
             return "unreachable method called";
+        }
+    };
+    
+    class TableException: public std::exception{
+   	public:
+    	TableException() {}
+    	~TableException() throw() {}
+    	
+    	/* Generate error message */
+        const char *what() const throw(){
+            return "symbol table is corrupt (for example missing levels)";
         }
     };
     

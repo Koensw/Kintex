@@ -6,7 +6,7 @@
 #include "../../../kintex.h"
 #include "../operands/operands.h"
 #include "../../group.h"
-#include "../../level.h"
+#include "../../table.h"
 
 namespace kintex{
     class Processor;
@@ -23,7 +23,7 @@ namespace kintex{
 
 		~DefaultStatementGroup(){}
 	private:
-		TokenList::iterator save;
+		SymbolTable::iterator save;
     };
 	
     /* Parentheses (special operator to combine tokens) */
@@ -50,7 +50,7 @@ namespace kintex{
         /* Name function */
         std::string getName() const{ return children[0]->getName();}
 	private:
-		TokenList::iterator save;
+		SymbolTable::iterator save;
     };
     
     /* Brackets (special operator to combine statements) */
@@ -82,7 +82,7 @@ namespace kintex{
 		//FIXME: better way to change returnval
 		Value returnVal;
 	private:
-		TokenList::iterator save;
+		SymbolTable::iterator save;
     };
 }
 

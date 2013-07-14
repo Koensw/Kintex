@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
 
+#include "token.h"
+#include "name.h"
 #include "operand.h"
 #include "interpreter.h"
 
@@ -19,6 +21,14 @@ Value::Value(const Operand &op): Handle<Operand>(op.clone()) {}
 
 /* Value conversion */
 Value::operator Expression() const { return Expression(*ptr); }
+
+/* DynamicExpression constructors */
+DynamicExpression::DynamicExpression(DynamicToken *op): Handle<DynamicToken>(op) {}
+DynamicExpression::DynamicExpression(DynamicToken &op): Handle<DynamicToken>(op.clone()) {}
+DynamicExpression::DynamicExpression(const DynamicToken &op): Handle<DynamicToken>(op.clone()) {}
+
+/* DynamicExpression conversion */
+DynamicExpression::operator Expression() const { return Expression(*ptr); }
 
 /* Statement proxy behaviours */
 std::ostream &Statement::display(std::ostream &out) const { return expr->display(out); }

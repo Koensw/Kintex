@@ -4,15 +4,15 @@
 #include <string>
 #include <fstream>
 
-#include "core/level.h"
+#include "core/table.h"
 
 //boolean used by QuitFunction to terminate application (no memory leaks!)
 extern bool quitInteractive;
 
 //grammar functions
-void addInteractiveLibrary(kintex::TokenList &tokenList);
-void addDefaultLibrary(kintex::TokenList &tokenList);
-kintex::TokenList getDefaultTokenList();
+void addInteractiveLibrary(kintex::SymbolTable &tokenList);
+void addDefaultLibrary(kintex::SymbolTable &tokenList);
+kintex::SymbolTable getDefaultSymbolTable();
 
 //helper functions
 void critical_error(std::string msg);

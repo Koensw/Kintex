@@ -15,7 +15,7 @@
 //main
 #include "program.h"
 #include "kintex.h"
-#include "core/level.h"
+#include "core/table.h"
 #include "core/exception.h"
 #include "core/token.h"
 #include "core/processor.h"
@@ -49,37 +49,35 @@ enum Mode {INTERACTIVE_MODE,FILE_MODE,DIRECT_MODE};
  */
 
 // add all interactive library functions 
-void addInteractiveLibrary(TokenList &tokenList){
-    tokenList.getLevel(2).addToken(new VersionFunction);
-    tokenList.getLevel(2).addToken(new HelpFunction);
-    tokenList.getLevel(2).addToken(new QuitFunction);
+void addInteractiveLibrary(SymbolTable &table){
+    table.getLevel("base")->addToken(new VersionFunction);
+    table.getLevel("base")->addToken(new HelpFunction);
+    table.getLevel("base")->addToken(new QuitFunction);
 }
 
 // add all default library functions 
-void addDefaultLibrary(TokenList &tokenList){
-    tokenList.getLevel(2).addToken(new PrintFunction);
-    tokenList.getLevel(2).addToken(new PrintExpressionFunction);
-    tokenList.getLevel(2).addToken(new ReturnFunction);
-    tokenList.getLevel(1).addToken(new IfFunction);
-    tokenList.getLevel(1).addToken(new WhileFunction);
-    tokenList.getLevel(10).addTokenFront(new SquareRootFunction);
+// FIXME: move this to core tokens
+void addDefaultLibrary(SymbolTable &table){
+    table.getLevel("base")->addToken(new PrintFunction);
+    table.getLevel("base")->addToken(new PrintExpressionFunction);
+    table.getLevel("base")->addToken(new ReturnFunction);
+    table.getLevel("base")->addToken(new IfFunction);
+    table.getLevel("base")->addToken(new WhileFunction);
+    table.getLevel("default")->addToken(new SquareRootFunction);
 }
 
 //return tokenlist and operand level index (for custom functions)
-TokenList getDefaultTokenList(){
+SymbolTable getDefaultSymbolTable(){
     /* define levels */
-	Level lowControlLevel(1);
-    Level coreFunctionLevel(2, Level::Assoc::RIGHT);
-    Level baseFunctionLevel(3, Level::Assoc::RIGHT);
-    Level setLevel(4, Level::Assoc::RIGHT);
-    Level comparisionLevel(5);
-    Level plusMinusLevel(6);
-    Level multiplyDivideLevel(7);
-    Level exponentRootLevel(8, Level::Assoc::RIGHT);
-    Level creatorLevel(9, Level::Assoc::RIGHT);
-    Level operandLevel(10, Level::Assoc::RIGHT);
-	Level controlLevel(11);
-
+    Level baseFunctionLevel("base", Level::Assoc::RIGHT);
+    Level setLevel("set", Level::Assoc::RIGHT);
+    Level comparisionLevel("compare");
+    Level plusMinusLevel("plusmin");
+    Level multiplyDivideLevel("multdiv");
+    Level exponentRootLevel("exp", Level::Assoc::RIGHT);
+    Level creatorLevel("create", Level::Assoc::RIGHT);
+    Level operandLevel("default");
+	Level controlLevel("control");
     
     /* add builtins */
     setLevel.addToken(new SetOperator);
@@ -99,31 +97,29 @@ TokenList getDefaultTokenList(){
     
     operandLevel.addToken(new FloatingPoint);
     operandLevel.addToken(new Integer);
-    operandLevel.addToken(new Void);
-    operandLevel.addToken(new FunctionCreator(operandLevel.getIndex()));
-    operandLevel.addToken(new VariableCreator(operandLevel.getIndex()));
+    creatorLevel.addToken(new FunctionCreator("default"));
+    creatorLevel.addToken(new VariableCreator("default"));
     
     controlLevel.addToken(new BracketsOperator);
     controlLevel.addToken(new ParenthesesOperator);
 	
     /* add levels */
-    TokenList tokenList;
-	tokenList.addNextLevel(controlLevel);
-	tokenList.addNextLevel(lowControlLevel);
-    tokenList.addNextLevel(coreFunctionLevel);
-    tokenList.addNextLevel(baseFunctionLevel);
-    tokenList.addNextLevel(comparisionLevel);
-    tokenList.addNextLevel(setLevel);
-    tokenList.addNextLevel(plusMinusLevel);
-    tokenList.addNextLevel(multiplyDivideLevel);
-    tokenList.addNextLevel(exponentRootLevel);
-	tokenList.addNextLevel(operandLevel);
-    tokenList.addNextLevel(creatorLevel);
+    SymbolTable table(new Void, new Void);
+    
+	table.addLevel(controlLevel, table.end());
+    table.addLevel(baseFunctionLevel);
+    SymbolTable::iterator compit = table.addLevel(comparisionLevel);
+    table.addLevel(setLevel, compit);
+    table.addLevel(plusMinusLevel);
+    table.addLevel(multiplyDivideLevel);
+    table.addLevel(exponentRootLevel);
+	SymbolTable::iterator opit = table.addLevel(operandLevel);
+    table.addLevel(creatorLevel, opit);
     
     /* add default library */
-    addDefaultLibrary(tokenList);
+    addDefaultLibrary(table);
     
-    return tokenList;
+    return table;
 }
     
 /*
@@ -210,7 +206,7 @@ bool interactive_mode(){
     std::cout << "|Type 'help' for more information or type 'quit' to stop|" << std::endl;
     
     //build token list (with custom functions)
-    TokenList tokenList = getDefaultTokenList();
+    SymbolTable tokenList = getDefaultSymbolTable();
     addInteractiveLibrary(tokenList);
     
 	//set default StatementGroup
@@ -271,7 +267,7 @@ bool file_mode(std::ifstream &file, std::string file_name){
 	DefaultStatementGroup *sg = new DefaultStatementGroup;
 	
     //build new interpreter
-    TokenList tokenList = getDefaultTokenList();
+    SymbolTable tokenList = getDefaultSymbolTable();
     Interpreter kintex(tokenList, sg);
     
     //parse file
@@ -320,7 +316,7 @@ bool direct_mode(std::string parseString){
 	DefaultStatementGroup *sg = new DefaultStatementGroup;
 	
     //build new interpreter
-    TokenList tokenList = getDefaultTokenList();
+    SymbolTable tokenList = getDefaultSymbolTable();
     Interpreter kintex(tokenList, sg);
     
     //parse file

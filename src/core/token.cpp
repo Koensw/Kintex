@@ -2,7 +2,7 @@
 
 #include "interpreter.h"
 #include "token.h"
-#include "level.h"
+#include "table.h"
 
 using namespace kintex;
 

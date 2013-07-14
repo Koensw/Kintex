@@ -3,6 +3,7 @@
 #include "exception.h"
 #include "processor.h"
 #include "interpreter.h"
+#include "operand.h"
 #include "name.h"
 
 using namespace kintex;

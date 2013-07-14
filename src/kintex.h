@@ -1,8 +1,8 @@
-#ifndef KINTEX_INTERPRETER_H
-#define KINTEX_INTERPRETER_H
+#ifndef KINTEX_H
+#define KINTEX_H
 
 #include "core/interpreter.h"
-#include "core/level.h"
+#include "core/table.h"
 #include "core/token.h"
 #include "core/group.h"
 
@@ -14,13 +14,12 @@ const std::string betweenChars = ";\n";
 namespace kintex{
     /* Provide some common methods, is normally the only directly reached class*/
     class Interpreter{
-        //friend class Processor;
         public:
             /* Almost all interpreter functions return a list of processed statements */
             typedef std::vector<Statement> StatementList;
 
             /* Default constructor */
-            Interpreter(TokenList tokens, StatementGroup *sg): tokenList(tokens), sgroup(sg) {}
+            Interpreter(SymbolTable &tokens, StatementGroup *sg): tokenList(tokens), sgroup(sg) {}
 
             /* Evaluate an string expression */
             StatementList parse(std::string, std::string = "");
@@ -33,10 +32,8 @@ namespace kintex{
         private:
             /* Method used by other public parse functions */
             template<typename Iter> StatementList parse(Iter begin, Iter end, std::string = "");
-            /* Methods used by friend Processor */
-            //TokenList getTokenList(){ return tokenList; }
 			//Needed classes
-            TokenList tokenList;
+            SymbolTable &tokenList;
 			StatementGroup *sgroup;
     };
 }

@@ -1,17 +1,17 @@
-#ifndef KINTEX_H
-#define KINTEX_H
+#ifndef KINTEX_INTERPRETER_H
+#define KINTEX_INTERPRETER_H
 
 #include <string>
 #include <vector>
 #include <memory>
-
+ 
 #include "../../external/handle.h"
 
 namespace kintex{
-    class Tokenizer;
     class Token;
+    class DynamicToken;
     class Operand;
-    class TokenList;
+    class SymbolTable;
     
     /* Defines a line of code that is used in processors and token */
 	/* FIXME: rename to Code ?? */
@@ -40,6 +40,7 @@ namespace kintex{
         
         operator Expression() const;
     };
+    
     /* Statement is a wrapper for separated expressions */
     class Statement{
     public:

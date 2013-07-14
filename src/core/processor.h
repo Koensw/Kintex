@@ -12,10 +12,10 @@
 #include <cctype>
 #include <iostream>
 
+#include "table.h"
 #include "interpreter.h"
 #include "group.h"
 #include "token.h"
-#include "level.h"
 
 namespace kintex{
     class Expression;
@@ -37,7 +37,7 @@ namespace kintex{
         friend class LeftToken;
         
         /** Default constructor */
-		Processor(TokenList &list, StatementGroup *g, std::string code, std::string file = ""); 
+		Processor(SymbolTable &list, StatementGroup *g, std::string code, std::string file = ""); 
 		
 		/** 'Normal'-assignment is not possible */
         Processor operator=(const Processor &p) = delete;
@@ -91,7 +91,7 @@ namespace kintex{
 			return !prevExpr.empty(); 
 		}
 		
-		/** Register and unregister groups for advanced analysis */
+		/** Register and unregister groups */
 		//register a group
 		void registerGroup(Group *g){
 			groups.push(g);  
@@ -104,21 +104,24 @@ namespace kintex{
 		//clear finish flag
 		void clearFinish(){ finish = false; }
 		
+		/** Register a static global */
+		void registerGlobal(std::string nm){ regnm = nm; }
+		
 		/** Special methods for special tokens */
 		//goto next line
 		void nextLine();
 		//(re)set level and get level
-		TokenList::iterator getLevel() const { return level; }
-		void setLevel(TokenList::iterator iter) { level = iter; }
-		void resetLevel() { level = tokenList.begin(); }
+		SymbolTable::iterator getLevel() const { return level; }
+		void setLevel(SymbolTable::iterator iter) { level = iter; }
+		void resetLevel() { level = symTable.begin(); }
         
     private:
 		/** Converts iterator to correct expression */
 		Expression getExpression(std::multimap<Position, Expression>::iterator, bool allowEmpty = false);
 		
         /* List of tokens and iterator */
-        TokenList &tokenList;
-        TokenList::iterator level;
+        SymbolTable &symTable;
+        SymbolTable::iterator level;
         
         /* List of not assigned expressions */
         std::multimap<Position, Expression> prevExpr;
@@ -127,6 +130,9 @@ namespace kintex{
 		StatementGroup *sg;
 		bool finish;
 		std::stack<Group*> groups;
+		
+		/* Registering globals (static) */
+		std::string regnm;
 		
         /* Interface for currently executed code */
         Line line;

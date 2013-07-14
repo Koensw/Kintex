@@ -39,6 +39,9 @@ Function *FunctionCreator::create(Processor &p){
 			args.push_back(expr);
 		}
 			  
+		//register token
+        p.registerGlobal(getLevelName());	  
+			  
         //built token
         Function *func = new Function(funcName, args); 
         return func;

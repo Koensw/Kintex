@@ -4,30 +4,32 @@
 #include <utility>
 #include <exception>
 #include <memory>
+#include <cmath>
 
 #include "processor.h"
 #include "token.h"
 #include "group.h"
 #include "exception.h"
 #include "interpreter.h"
-#include "level.h"
-#include "tokens/operands/operands.h"
-#include "tokens/operators/operators.h"
-#include "tokens/names/names.h"
-#include "tokens/control/control.h"
-
+#include "table.h"
+#include "tokens/operands/operands.h" //FIXME: shouldn't include tokens
 
 using namespace kintex;
 using std::vector;
 
-/* Default constructor (FIXME: move constructor) */
-Processor::Processor(TokenList &list, StatementGroup *g, std::string code, std::string file):
-tokenList(list), level(list.begin()), sg(g), finish(false) {
+/* Default constructor */
+Processor::Processor(SymbolTable &list, StatementGroup *g, std::string code, std::string file):
+symTable(list), level(list.begin()), sg(g), finish(false) {
 	//initialize code
 	line.file = file;
 	line.code = std::shared_ptr<std::string>(new std::string(code));
 	line.number = 1;
 	line.pos = std::make_pair(0, line.code->size());
+	
+	//remove tabs
+	for(size_t i=0; i<line.code->size(); ++i){
+		if((*line.code)[i] == '\t') (*line.code)[i] = ' ';
+	}
 	
 	//set positions
 	size_t pos = line.code->find('\n');
@@ -109,17 +111,19 @@ Expression Processor::getNextExpression(Position pos, bool allowEmpty, bool spec
 	}
 	
     //save level and begin with token under
-    TokenList::iterator currentLevel = level;
-    level = tokenList.begin();
+    SymbolTable::iterator currentLevel = level;
+    level = symTable.begin();
    
-    while(level!=tokenList.end()){
-        //search for next token if level has higher precedence
-        if((level->getAssoc() == Level::Assoc::LEFT && level->getIndex() > currentLevel->getIndex()) 
-            || (level->getAssoc() == Level::Assoc::RIGHT && level->getIndex() >= currentLevel->getIndex())){
-            for(Level::iterator iter = level->begin(); iter < level->end(); ++iter){
+   	//std::cout << symTable.end() << std::endl;
+    while(level!=symTable.end()){
+        //search for next token if table.has higher precedence
+        if((level->getAssoc() == Level::Assoc::LEFT && (level->getIndex() - currentLevel->getIndex()) > 1e-10) 
+            || (level->getAssoc() == Level::Assoc::RIGHT && 
+               (level->getIndex() > currentLevel->getIndex() || std::abs(level->getIndex() - currentLevel->getIndex()) < 1e-10))){
+            for(auto iter = level->begin(); iter != level->end(); ++iter){
 		        //DEBUG:
 		        //char cur = getChar();
-				//std::cout << " *> " << cur << " - " << typeid(**iter).name() << std::endl; 
+				//std::cout << " *> " << cur << " - " << typeid(**iter).name() << " - " << level->name << std::endl; 
 				
 		        //save current positions
 		        size_t saveCurrent = current;
@@ -135,13 +139,11 @@ Expression Processor::getNextExpression(Position pos, bool allowEmpty, bool spec
 					if(tok == &(**iter)) tokenExpr = *iter; //get old expression if the same (else memory errors!)
 					else tokenExpr = Expression(tok); //create an expression (smart pointer) from the token
 
-					//add token to level if needed
-					//FIXME: make interface better!
-                    if((*iter)->getAddLevelIndex() != 0){
-                        for(TokenList::LevelList::iterator it = tokenList.begin(); it != tokenList.end(); ++it){
-                            if(it->getIndex() == (*iter)->getAddLevelIndex()) it->addTokenFront(tokenExpr);
-                        }
-                    }
+					//add token to level if registered
+					if(!regnm.empty()){
+						symTable.getLevel(regnm)->addToken(tokenExpr);
+						regnm = "";
+					}
                     
                     //set line and positions
                     tokenExpr->line = line;
@@ -173,7 +175,7 @@ Expression Processor::getNextExpression(Position pos, bool allowEmpty, bool spec
     }
     
     //check if on lowest level no token could be matched and it's not the end of expression --> then the token is unknown
-    if(currentLevel->getIndex()==0) {
+    if(currentLevel->getIndex()<0) {
         throw UnknownToken(*this);
     }
 

@@ -43,11 +43,35 @@ namespace kintex{
         Value val;
     };
     
+    class VariableN: public DynamicToken{
+    public:
+        /* Default constructor */
+        VariableN(std::string name): DynamicToken(name, DynamicToken::EXTEND), val(Void()) {}
+        /* Clone function */
+        VariableN *clone() const {return new VariableN(*this);}
+        /* Result function --> return clone of bound value */
+        Value result(){
+            if(typeid(*val) != typeid(Void)){
+                return val->clone();
+            }else{
+                //throw an exception, if the variable hasn't been defined
+                throw UndefinedName(*this);
+            }
+        }
+        /* Name function */
+        std::string getName() const{ return "variable";}
+        
+        /* Special set operator */
+        Operand &operator=(Operand &op);
+    private:
+        Value val;
+    };
+    
     /* Creator for variables */
     class VariableCreator: public Creator{
     public:
         /* Default constructor */
-        VariableCreator(int level): Creator(level) {}
+        VariableCreator(std::string nm): Creator(nm) {}
         /* Clone function --> normally not needed */
         VariableCreator *clone() const {return new VariableCreator(*this);}
         /* Create operation -> returns a variable */
@@ -159,7 +183,7 @@ namespace kintex{
     class FunctionCreator: public Creator{
     public:
         /* Default constructor */
-        FunctionCreator(int level): Creator(level) {}
+        FunctionCreator(std::string nm): Creator(nm) {}
         /* Clone function --> normally not needed */
         FunctionCreator *clone() const{return new FunctionCreator(*this);}
         /* Create operation -> returns a variable */

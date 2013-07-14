@@ -28,7 +28,6 @@
 */ 
 
 #include <stdexcept>
-
 #include <iostream>
 
 template <class T> class Handle {
