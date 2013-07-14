@@ -1,0 +1,26 @@
+=== GRAMMAR ===
+-----
+BASIC
+-----
+
+- <space> is a special character 
+- \n is another special character (new lines should be carefully handled)
+- 0 is another special character (almost equal to space)
+- a token should never match a special character
+- all symbols (and combinatons) can be used as operators, letters and numbers should not be used to create operators
+- operands consist of combinations of symbols and normal characters or consist of numbers
+- names should only use normal characters
+- all combinations of normal characters that are not matched by operands are names
+- all names that are not directly matched are trying to be matched dynamically
+- the 'void' token (created with (void)) will be ensured to exists in the main library
+
+-----------
+INTERPRETER
+-----------
+an interpreter should provide:
+- a static symbol table 
+- a statementgroup (to determine starting and statement end conditions)
+
+OTHER
+-----
+- all rules not mentioned above could be implemented by own/external token libraries
