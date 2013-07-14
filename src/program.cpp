@@ -1,6 +1,6 @@
 //define version information
 
-#define VERSION "2.0"
+#define VERSION "2.1"
 #define YEAR "2012-2013"
 
 #include <iostream>
@@ -106,7 +106,7 @@ SymbolTable getDefaultSymbolTable(){
     /* add levels */
     SymbolTable table(new Void, new Void);
     
-	table.addLevel(controlLevel, table.end());
+	table.addEndLevel(controlLevel);
     table.addLevel(baseFunctionLevel);
     SymbolTable::iterator compit = table.addLevel(comparisionLevel);
     table.addLevel(setLevel, compit);
