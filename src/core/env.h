@@ -13,27 +13,18 @@
 #include <map>
 
 #include "interpreter.h"
-#include "token.h"
+#include "table.h"
+#include "name.h"
 
 namespace kintex{  
     class Environment{
     public:
     	Environment() {}
     	
-    	//get 'best' token in current environment
-    	Expression getToken(std::string id);
-    	Expression isToken(std::string id);
-    	
-    	//add token to dynamic environment
-    	void addToken(DynamicToken *tok);
-    	void removeToken(std::string id);
-    	
-    	//extend/reduce the score
-    	void extend();
-    	void reduce();
+    	DynamicSymbolTable &getDynSym() {return dynsym;}
     private:
-    	 dyntable;
-    }
+    	 DynamicSymbolTable dynsym;
+    };
 }
 
 #endif

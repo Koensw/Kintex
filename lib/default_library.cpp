@@ -9,7 +9,7 @@ using namespace kintex;
  * Set the return type of the first found bracket-operator, starting from bottom to top
  * Returns: void
  */
-Value ReturnFunction::operator()(std::vector<Expression> values){
+Value ReturnFunction::operator()(std::vector<Expression> values, Environment &env){
     //find correct parent
     Token *par = this;
     BracketsOperator *op = nullptr;
@@ -17,7 +17,7 @@ Value ReturnFunction::operator()(std::vector<Expression> values){
         par = par->getParent();
     }
     //check if parent is found
-    if(op!=nullptr) op->returnVal = values[0]->result();
+    if(op!=nullptr) op->returnVal = values[0]->result(env);
     else throw CalculationError(*this, "No matching brackets found.");
     return Void(getParent());
 }
@@ -26,8 +26,8 @@ Value ReturnFunction::operator()(std::vector<Expression> values){
  * Check if first parameter is true, then execute second statement
  * Returns: void
  */
-Value IfFunction::operator()(std::vector<Expression> values){
-    if(!(*values[0]->result() == Integer(0))) values[1]->result();
+Value IfFunction::operator()(std::vector<Expression> values, Environment &env){
+    if(!(*values[0]->result(env) == Integer(0))) values[1]->result(env);
     return Void(getParent());
 }
 
@@ -35,8 +35,8 @@ Value IfFunction::operator()(std::vector<Expression> values){
  * Check if first parameter is true, and keep executing second argument, until first parameter become false
  * Returns: void
  */
-Value WhileFunction::operator()(std::vector<Expression> values){
-    while(!(*values[0]->result() == Integer(0))) values[1]->result();
+Value WhileFunction::operator()(std::vector<Expression> values, Environment &env){
+    while(!(*values[0]->result(env) == Integer(0))) values[1]->result(env);
     return Void(getParent());
 }
 
@@ -44,8 +44,8 @@ Value WhileFunction::operator()(std::vector<Expression> values){
  *  Prints the result of the argument to std-out
  *  Returns: void
  */
-Value PrintFunction::operator()(std::vector<Expression> values){
-    std::cout << values[0]->result() << std::endl;
+Value PrintFunction::operator()(std::vector<Expression> values, Environment &env){
+    std::cout << values[0]->result(env) << std::endl;
     return Void(getParent());
 }
 
@@ -53,8 +53,8 @@ Value PrintFunction::operator()(std::vector<Expression> values){
  *  Prints the expression of the argument to std-out
  *  Returns: void
  */
-Value PrintExpressionFunction::operator()(std::vector<Expression> values){
-    values[0]->result();
+Value PrintExpressionFunction::operator()(std::vector<Expression> values, Environment &env){
+    values[0]->result(env);
     std::cout << values[0] << std::endl;
     return Void(getParent());
 }
@@ -63,8 +63,8 @@ Value PrintExpressionFunction::operator()(std::vector<Expression> values){
  *  Computes the square root of an expression
  *  Returns: square root
  */
-Value SquareRootFunction::operator()(std::vector<Expression> values){
-	Value result(values[0]->result());
+Value SquareRootFunction::operator()(std::vector<Expression> values, Environment &env){
+	Value result(values[0]->result(env));
 	if(typeid(*result) == typeid(Integer)){
 		result = FloatingPoint(dynamic_cast<Integer&>(*result));
 	}

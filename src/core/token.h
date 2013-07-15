@@ -12,12 +12,11 @@
 #include "interpreter.h"
 
 namespace kintex{
-
-    class Operand;
+	class Environment;
     class Processor;
     class Level;
     class Value;
-
+	
     class Token{
     	friend class Statement;
         friend class Processor;
@@ -33,7 +32,8 @@ namespace kintex{
             
             /** Returns result of expression
             */
-            virtual Value result() = 0;
+			virtual Value result(Environment&) = 0;
+			
             /** Display token value to stream
             */
             virtual std::ostream &display(std::ostream&) const = 0;

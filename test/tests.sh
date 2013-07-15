@@ -41,6 +41,8 @@ echo "Testing core library";
 testFile test/library.kin "4037913"
 echo "Testing builtin functions";
 testCommand "sqrt(9)" "3"
+echo "Testing scopes";
+testFile test/scope.kin "-197"
 echo "Running total test (combination of features)... ";
 testFile test/total.kin "720.938"
 echo "-->Tests finished"

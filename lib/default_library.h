@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "../src/core/env.h"
 #include "../src/core/tokens/control/control.h"
 #include "../src/core/interpreter.h"
 #include "../src/core/tokens/names/names.h"
@@ -24,7 +25,7 @@ public:
     ReturnFunction(): kintex::FunctionBase("return", 1) {}
     ReturnFunction *clone() const{ return new ReturnFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 /** Comparision functions */
@@ -34,7 +35,7 @@ public:
     IfFunction(): kintex::FunctionBase("if", 2) {}
     IfFunction *clone() const{ return new IfFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
     
     /* other display operator */
     std::ostream &display(std::vector<kintex::Expression> values, std::ostream &out) const{
@@ -48,7 +49,7 @@ public:
     WhileFunction(): kintex::FunctionBase("while", 2) {}
     WhileFunction *clone() const{ return new WhileFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
     
     /* other display operator */
     std::ostream &display(std::vector<kintex::Expression> values, std::ostream &out) const{
@@ -64,7 +65,7 @@ public:
     PrintFunction(): kintex::FunctionBase("print", 1) {}
     PrintFunction *clone() const{ return new PrintFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+	kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 //print expression to std-out
@@ -73,7 +74,7 @@ public:
     PrintExpressionFunction(): kintex::FunctionBase("show", 1) {}
     PrintExpressionFunction *clone() const{ return new PrintExpressionFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 /** Math function */
@@ -83,7 +84,7 @@ public:
     SquareRootFunction(): kintex::FunctionBase("sqrt", 1) {}
     SquareRootFunction *clone() const{ return new SquareRootFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 #endif

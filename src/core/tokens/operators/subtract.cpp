@@ -21,10 +21,10 @@ SubtractOperator *SubtractOperator::create(Processor &p){
     return new SubtractOperator(prev, p.getNextExpression(pos));
 }
 
-Value SubtractOperator::result(){
+Value SubtractOperator::result(Environment &env){
     //if right hand is float convert lefthand to float too
-    Value ret = children[0]->result();
-    Value result = children[1]->result();
+    Value ret = children[0]->result(env);
+    Value result = children[1]->result(env);
 	if(typeid(*ret) == typeid(Void)){
 		Value val = Value(new Integer(-1));
 		*result *= *val;

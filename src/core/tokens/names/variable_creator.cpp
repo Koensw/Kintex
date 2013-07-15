@@ -23,10 +23,7 @@ Variable *VariableCreator::create(Processor &p){
         //skip tokens
         while(i--!=0) p.nextChar();
         
-        //register token
-        p.registerGlobal(getLevelName());
-        
-        //built token
+        //build dynamic token
         Variable *var = new Variable(varName); 
         return var;
     }

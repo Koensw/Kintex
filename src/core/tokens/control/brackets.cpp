@@ -48,7 +48,7 @@ bool BracketsOperator::poll(Processor &p){
 	return (p.getChar() == '}' || p.getChar() == ';' || p.getChar() == '\n');
 }
 
-Value BracketsOperator::result(){
+Value BracketsOperator::result(Environment &env){
     //always return void (only return could change this)
     returnVal = new Void;
     //execute all statements
@@ -56,13 +56,19 @@ Value BracketsOperator::result(){
         //execute all statements
         for(std::vector<Expression>::iterator iter = children.begin(); iter < children.end(); ++iter){
             (*iter)->parent = this;
-            (*iter)->result();
+            (*iter)->result(env);
             //stop processing if return value is found (check with parent, that is not set then)
             if(returnVal->getParent() != nullptr) break;
         }
     }
     if(returnVal->getParent() == nullptr) returnVal->parent = getParent();
-    return returnVal;
+	
+	//save return value
+	Value cpy = returnVal;
+
+	//reset return value
+	returnVal = new Void;
+    return cpy;
 }
 
 /* Special display operator */

@@ -15,7 +15,7 @@ InequalityOperator *InequalityOperator::create(Processor &p){
     return new InequalityOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
-Value InequalityOperator::result(){
-    if(*children[0]->result() == *children[1]->result()) return Integer(0, this);
+Value InequalityOperator::result(Environment &env){
+    if(*children[0]->result(env) == *children[1]->result(env)) return Integer(0, this);
     else return Integer(1, this);
 }

@@ -19,7 +19,7 @@ namespace kintex{
         /* Create constructor */
         AddOperator(Expression lhs, Expression rhs): BinaryOperator("+", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         AddOperator *clone() const{ return new AddOperator(*this);}
         /* Create operator */
@@ -35,7 +35,7 @@ namespace kintex{
         /* Create constructor */
         SubtractOperator(Expression lhs, Expression rhs): BinaryOperator("-", lhs, rhs){}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         SubtractOperator *clone() const{ return new SubtractOperator(*this);}
         /* Create operator */
@@ -50,7 +50,7 @@ namespace kintex{
         /* Createconstructor */
         MultiplyOperator(Expression lhs, Expression rhs): BinaryOperator("*", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         MultiplyOperator *clone() const{ return new MultiplyOperator(*this);}
         /* Create operator */
@@ -65,7 +65,7 @@ namespace kintex{
         /* Create constructor */
         DivideOperator(Expression lhs, Expression rhs): BinaryOperator("/", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         DivideOperator *clone() const{ return new DivideOperator(*this);}
         /* Create operator */
@@ -80,7 +80,7 @@ namespace kintex{
         /* Create constructor */
         EqualityOperator(Expression lhs, Expression rhs): BinaryOperator("==", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         EqualityOperator *clone() const{ return new EqualityOperator(*this);}
         /* Create operator */
@@ -96,7 +96,7 @@ namespace kintex{
         /* Create constructor */
         InequalityOperator(Expression lhs, Expression rhs): BinaryOperator("!=", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         InequalityOperator *clone() const{ return new InequalityOperator(*this);}
         /* Create operator */
@@ -111,7 +111,7 @@ namespace kintex{
         /* Create constructor */
         SmallerOperator(Expression lhs, Expression rhs, bool eq): BinaryOperator("<", lhs, rhs), equal(eq) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         SmallerOperator *clone() const{ return new SmallerOperator(*this);}
         /* Create operator */
@@ -130,7 +130,7 @@ namespace kintex{
         /* Create constructor */
         BiggerOperator(Expression lhs, Expression rhs, bool eq): BinaryOperator(">", lhs, rhs), equal(eq) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         BiggerOperator *clone() const{ return new BiggerOperator(*this);}
         /* Create operator */
@@ -150,7 +150,7 @@ namespace kintex{
         /* Create constructor */
         SetOperator(Expression lhs, Expression rhs): BinaryOperator("=", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         SetOperator *clone() const{ return new SetOperator(*this);}
         /* Create operator */
@@ -167,7 +167,7 @@ namespace kintex{
         /* Create constructor */
         ExponentOperator(Expression lhs, Expression rhs): BinaryOperator("^", lhs, rhs) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
         /* Clone operator */
         ExponentOperator *clone() const{ return new ExponentOperator(*this);}
         /* Create operator */

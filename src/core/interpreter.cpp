@@ -22,17 +22,12 @@ Value::Value(const Operand &op): Handle<Operand>(op.clone()) {}
 /* Value conversion */
 Value::operator Expression() const { return Expression(*ptr); }
 
-/* DynamicExpression constructors */
-DynamicExpression::DynamicExpression(DynamicToken *op): Handle<DynamicToken>(op) {}
-DynamicExpression::DynamicExpression(DynamicToken &op): Handle<DynamicToken>(op.clone()) {}
-DynamicExpression::DynamicExpression(const DynamicToken &op): Handle<DynamicToken>(op.clone()) {}
-
 /* DynamicExpression conversion */
 DynamicExpression::operator Expression() const { return Expression(*ptr); }
 
 /* Statement proxy behaviours */
 std::ostream &Statement::display(std::ostream &out) const { return expr->display(out); }
-Expression Statement::result() { return expr->result(); }
+Expression Statement::result(Environment &env) { return expr->result(env); }
 
 /* Overloaded token operators */
 std::ostream &kintex::operator<<(std::ostream &os, const Expression &expr){

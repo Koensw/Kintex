@@ -15,10 +15,10 @@ AddOperator *AddOperator::create(Processor &p){
     return new AddOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
-Value AddOperator::result(){
+Value AddOperator::result(Environment &env){
     //if right hand is float convert lefthand to float too
-    Value ret = children[0]->result();
-    Value result = children[1]->result();
+    Value ret = children[0]->result(env);
+    Value result = children[1]->result(env);
     if(typeid(*result) == typeid(FloatingPoint) && typeid(*ret) == typeid(Integer)){
         ret = FloatingPoint(dynamic_cast<Integer&>(*ret));
     }

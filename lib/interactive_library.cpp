@@ -11,7 +11,7 @@ using namespace kintex;
  *  Return the version information
  *  Returns: void
  */
-Value VersionFunction::operator()(std::vector<Expression> values){
+Value VersionFunction::operator()(std::vector<Expression> values, kintex::Environment &env){
     version();
     return Void(getParent());
 }
@@ -20,7 +20,7 @@ Value VersionFunction::operator()(std::vector<Expression> values){
  *  Return the help information (FIXME: extensive help)
  *  Returns: void
  */
-Value HelpFunction::operator()(std::vector<Expression> values){
+Value HelpFunction::operator()(std::vector<Expression> values, kintex::Environment &env){
     help();
     return Void(getParent());
 }
@@ -29,7 +29,7 @@ Value HelpFunction::operator()(std::vector<Expression> values){
  *  Quits interactive mode
  *  Returns: void
  */
-Value QuitFunction::operator()(std::vector<Expression> values){
+Value QuitFunction::operator()(std::vector<Expression> values, kintex::Environment &env){
     //set quit app variable
     quitInteractive = true;
     return Void(getParent());

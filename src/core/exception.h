@@ -11,6 +11,7 @@
 
 #include "processor.h"
 #include "interpreter.h"
+#include "env.h"
 
 namespace kintex{
     
@@ -160,9 +161,11 @@ namespace kintex{
     class ExecError{
     public:
         /* Default constructor */
-        ExecError(const Token &givenError): error(givenError) {}
+        ExecError(const Token &givenError, Environment ev): error(givenError), env(ev) {}
+        ExecError(const Token &givenError): error(givenError), env(Environment()) {}
         /* Default pointer (for parents) constructor */
-        ExecError(Token *givenError): error(givenError) {}
+        ExecError(Token *givenError, Environment ev): error(givenError), env(ev) {}
+        ExecError(Token *givenError): error(givenError), env(Environment()) {}
         
         /* Returns expression */
         virtual std::string getExpressionString() const {
@@ -189,6 +192,7 @@ namespace kintex{
 		/* Get identifier if used */
 		std::string getIdentifier() const;
         Expression error;
+		Environment env;
     };
     
     class UnsupportedOperation: public ExecError{

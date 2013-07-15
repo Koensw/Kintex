@@ -18,7 +18,7 @@ public:
     VersionFunction(): kintex::FunctionBase("version", 0) {}
     VersionFunction *clone() const{ return new VersionFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 //show help information
@@ -27,7 +27,7 @@ public:
     HelpFunction(): kintex::FunctionBase("help", 0) {}
     HelpFunction *clone() const{ return new HelpFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 //quit interactive mode
@@ -36,7 +36,7 @@ public:
     QuitFunction(): kintex::FunctionBase("quit", 0) {}
     QuitFunction *clone() const{ return new QuitFunction(*this); }
     
-    kintex::Value operator()(std::vector<kintex::Expression>);
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
 #endif

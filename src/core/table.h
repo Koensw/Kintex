@@ -84,7 +84,6 @@ namespace kintex{
         
         /* Merge symbol tables */
         void merge(SymbolTable &s);
-        void merge(SymbolTable &s, iterator bef);
         
         iterator getLevel(std::string nm);
     private:
@@ -100,6 +99,7 @@ namespace kintex{
     */
     class DynamicExpression: public Handle<DynamicToken> {
     public:
+		DynamicExpression();
         DynamicExpression(DynamicToken *op);
         DynamicExpression(DynamicToken &op);
         DynamicExpression(const DynamicToken &op);
@@ -109,22 +109,29 @@ namespace kintex{
     
     class DynamicSymbolTable{
     public:
+		enum Scope{
+			NORMAL, FUNCTION
+		};
+		
     	DynamicSymbolTable() {
-    		extend();
+    		extend(NORMAL);
     	}
     	~DynamicSymbolTable() {}
     	
-    	Expression getToken(std::string id);
+    	DynamicExpression getToken(std::string id, bool est = false);
     	bool isToken(std::string id);
     	
-    	void addToken(DynamicExpression tok);
+    	void addToken(DynamicExpression tok, bool red = false);
     	void removeToken(std::string id);
     	
-    	void extend();
+		Scope currentScope() {return scps.back();}
+		
+    	void extend(Scope scp);
     	void reduce();
     
     private:
 	    std::vector<std::map<std::string, DynamicExpression> > dynsym;
+		std::vector<Scope> scps;
 	};
 }
 

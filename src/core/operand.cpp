@@ -2,6 +2,6 @@
 
 using namespace kintex;
 
-Value Operand::result(){ 
+Value Operand::result(Environment &env){ 
     return *this;
 }

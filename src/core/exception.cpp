@@ -74,7 +74,7 @@ std::string ExecError::getIdentifier() const{
 UnsupportedOperation::UnsupportedOperation(const Token &child): ExecError(child.getParent()->clone()) {
     //saving result of all children (do it now, because after construction, the object should be constant)
     for(std::vector<Expression>::iterator iter = error->children.begin(); iter < error->children.end(); ++iter){
-        children.push_back((*iter)->result());
+        children.push_back((*iter)->result(env));
     }
 } 
 std::string UnsupportedOperation::what() const throw(){

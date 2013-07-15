@@ -9,6 +9,7 @@
 
 namespace kintex{
 	class Operand;
+	class Environment;
 
     class Name: public Token{
         friend class UndefinedName;
@@ -23,32 +24,25 @@ namespace kintex{
         }
         
         /* Special set-operator for names */
-        virtual Operand &operator=(Operand &op) = 0;
     protected:
         std::string name;
     };
     
     class DynamicToken: public Name {
     public:
-    	enum Type{
-    		EXTEND, SINGLE
-    	};
-    
-		DynamicToken(std::string id, Type tp): Name(id), type(tp) {}
-		~DynamicToken();
+		DynamicToken(std::string id): Name(id) {}
+		~DynamicToken() {}
 		
 		//Dynamic tokens could not be created and are not existing for the user
 		Token *create(Processor&) { return nullptr; };
-		std::ostream &display(std::ostream&) const;
-		std::string getName() const;
-		Token &getContents();
 		
-		/** Redefine pure virtual clone to give an DynamicToken back --> else DynamicExpression class is not working */
+		/** Redefine pure virtual */
 		virtual DynamicToken *clone() const = 0;
+		virtual Operand &set(Operand &op, Environment &env) = 0;
 		
 	    std::string getId() { return name; }
-	protected:
-		Type type;
+	public:
+        Expression val;
     };
     
     class Creator: public Token{
@@ -58,7 +52,7 @@ namespace kintex{
         ~Creator() {}
    
         /* Result function --> should never be reached! */
-        Value result();
+        Value result(Environment &env);
         /* Display function --> should never be reached! */
         std::ostream &display(std::ostream &out) const;
         

@@ -3,6 +3,7 @@
 #include "interpreter.h"
 #include "token.h"
 #include "table.h"
+#include "operand.h"
 
 using namespace kintex;
 

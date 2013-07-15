@@ -15,7 +15,7 @@ EqualityOperator *EqualityOperator::create(Processor &p){
     return new EqualityOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
-Value EqualityOperator::result(){
-    if(*children[0]->result() == *children[1]->result()) return Integer(1, this);
+Value EqualityOperator::result(Environment &env){
+    if(*children[0]->result(env) == *children[1]->result(env)) return Integer(1, this);
     else return Integer(0, this);
 }

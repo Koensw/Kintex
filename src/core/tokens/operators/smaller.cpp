@@ -20,10 +20,10 @@ SmallerOperator *SmallerOperator::create(Processor &p){
     return new SmallerOperator(p.getPrevExpression(pos), p.getNextExpression(pos), eq);
 }
 
-Value SmallerOperator::result(){
+Value SmallerOperator::result(Environment &env){
     //if right hand is float convert lefthand to float too
-	Value left = children[0]->result();
-	Value right = children[1]->result();
+	Value left = children[0]->result(env);
+	Value right = children[1]->result(env);
     if(*left < *right || (equal && *left == *right)) return Integer(1, this);
     else return Integer(0, this);
 }

@@ -1,5 +1,6 @@
 #include "table.h"
 #include "exception.h"
+#include "operand.h"
 
 using namespace kintex;
 
@@ -75,36 +76,64 @@ SymbolTable::iterator SymbolTable::addEndLevel(Level lev){
 	return addLevel(lev, end());
 }
 
-/* Merge symbol table 
-TODO: IMPLEMENT THIS */
-void SymbolTable::merge(SymbolTable &s) {}
-void SymbolTable::merge(SymbolTable &s, SymbolTable::iterator bef) {}
+/* Merge symbol table */
+void SymbolTable::merge(SymbolTable &s) {
+	auto iter2 = s.lookup.rend();
+	for(auto iter = s.lookup.rbegin(); iter != s.lookup.rend(); ++iter){		
+		if(iter->first == "default" || iter->first == "start") continue;
+		
+		if(iter2 != s.lookup.rend()) {
+			addLevel(*iter->second, getLevel(iter2->first));
+			++iter2;
+		}else {
+			addLevel(*iter->second);
+			iter2 = s.lookup.rbegin();
+		}
+	}
+}
  
 /* === DYNAMIC SYMBOL TABLE === */
-Expression DynamicSymbolTable::getToken(std::string id){
+DynamicExpression::DynamicExpression(): Handle<DynamicToken>(nullptr) {}
+DynamicExpression::DynamicExpression(DynamicToken *tok): Handle<DynamicToken>(tok) {}
+DynamicExpression::DynamicExpression(DynamicToken &tok): Handle<DynamicToken>(tok.clone()) {}
+DynamicExpression::DynamicExpression(const DynamicToken &tok): Handle<DynamicToken>(tok.clone()) {}
+
+DynamicExpression DynamicSymbolTable::getToken(std::string id, bool est){
 	for(auto iter = dynsym.rbegin(); iter != dynsym.rend(); ++iter){
 		auto chk = iter->find(id);
 		if(chk != iter->end()) return chk->second;
+		if(est) break;
 	}
-	return Expression();
+	return DynamicExpression();
 }
 bool DynamicSymbolTable::isToken(std::string id){
 	return getToken(id).isBound();
 }
     	
-void DynamicSymbolTable::addToken(DynamicExpression expr){
-	//FIXME: replace ?
-	//dynsym.back()[expr->getId()] = expr;
+void DynamicSymbolTable::addToken(DynamicExpression expr, bool red){
+	if(!red){
+		for(auto iter = dynsym.rbegin(); iter != dynsym.rend(); ++iter){
+			auto chk = iter->find(expr->getId());
+			if(chk != iter->end()) {
+				chk->second = expr;
+				return;
+			}
+		}
+	}
+	
+	dynsym.back()[expr->getId()] = expr;
 }
 //TODO: implement
 void DynamicSymbolTable::removeToken(std::string id){
 	return;
 }
 
-void DynamicSymbolTable::extend(){
-	dynsym.push_back(std::map<std::string, DynamicExpression>());	
+void DynamicSymbolTable::extend(Scope scp){
+	dynsym.push_back(std::map<std::string, DynamicExpression>());
+	scps.push_back(scp);
 }
 void DynamicSymbolTable::reduce(){
 	dynsym.pop_back();
-	if(dynsym.empty()) extend();
+	scps.pop_back();
+	if(dynsym.empty()) extend(DynamicSymbolTable::NORMAL);
 }

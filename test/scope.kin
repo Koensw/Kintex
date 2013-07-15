@@ -1,10 +1,10 @@
-y = 8
+z = 8
 
 fac(x) = {
+	y = -1*x;
 	if(x == 0) return 1
 	z = fac(x-1)*x;
-	return z
+	return z+y
 }
 
-print fac(5)
-
+print fac(5)+z

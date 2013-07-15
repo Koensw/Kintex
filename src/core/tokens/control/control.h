@@ -34,7 +34,7 @@ namespace kintex{
         /* Create constructor */
         ParenthesesOperator(Expression expr): UnaryOperator("(", expr) {}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
 		/* Poll current parentheses */
 		bool poll(Processor &p);
         /* Display operator */
@@ -64,7 +64,7 @@ namespace kintex{
 			if(children.empty()) children.push_back(Expression(new Void));
 		}
         /* Result operator */
-        Value result();
+        Value result(Environment &env);
 		/* Poll current brackets */
 		bool poll(Processor &p);
         /* Display operator */

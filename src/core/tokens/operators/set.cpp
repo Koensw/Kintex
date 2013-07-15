@@ -20,14 +20,14 @@ SetOperator *SetOperator::create(Processor &p){
 }
 
 //FIXME: support reassign of other type of vars
-Value SetOperator::result(){
+Value SetOperator::result(Environment &env){
     //check if ret is a variable or function -> else throw UnsupportedOperation
     if(typeid(children[0]->getContents()) == typeid(Variable)){
         //cast token to name (always succeed, because it is a variable)
-        Name &ret(dynamic_cast<Name&>(children[0]->getContents()));
+        Variable &ret(dynamic_cast<Variable&>(children[0]->getContents()));
         
-        ret = *(children[1]->result());
-        return ret.result();
+        ret.set(*(children[1]->result(env)), env);
+        return ret.result(env);
     }else if(typeid(children[0]->getContents()) == typeid(Function)){
         //cast token to function
         Function &ret(dynamic_cast<Function&>(children[0]->getContents()));

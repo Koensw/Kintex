@@ -10,61 +10,27 @@
 #include "../operands/operands.h"
 #include "../../interpreter.h"
 #include "../../exception.h"
+#include "../../env.h"
 
 namespace kintex{
     /*
      * Variable classes 
      */
     
-    /* Variable itself */
-    class Variable: public Name{
+    class Variable: public DynamicToken{
+		friend class DynamicToken;
     public:
         /* Default constructor */
-        Variable(std::string name): Name(name), val(Void()) {}
+        Variable(std::string name): DynamicToken(name) {}
         /* Clone function */
         Variable *clone() const {return new Variable(*this);}
         /* Result function --> return clone of bound value */
-        Value result(){
-            if(typeid(*val) != typeid(Void)){
-                return val->clone();
-            }else{
-                //throw an exception, if the variable hasn't been defined
-                throw UndefinedName(*this);
-            }
-        }
-        /* Create operation */
-        Variable *create(Processor&);
+        Value result(Environment &env);
         /* Name function */
         std::string getName() const{ return "variable";}
         
         /* Special set operator */
-        Operand &operator=(Operand &op);
-    private:
-        Value val;
-    };
-    
-    class VariableN: public DynamicToken{
-    public:
-        /* Default constructor */
-        VariableN(std::string name): DynamicToken(name, DynamicToken::EXTEND), val(Void()) {}
-        /* Clone function */
-        VariableN *clone() const {return new VariableN(*this);}
-        /* Result function --> return clone of bound value */
-        Value result(){
-            if(typeid(*val) != typeid(Void)){
-                return val->clone();
-            }else{
-                //throw an exception, if the variable hasn't been defined
-                throw UndefinedName(*this);
-            }
-        }
-        /* Name function */
-        std::string getName() const{ return "variable";}
-        
-        /* Special set operator */
-        Operand &operator=(Operand &op);
-    private:
-        Value val;
+        Operand &set(Operand &op, Environment &env);
     };
     
     /* Creator for variables */
@@ -92,7 +58,7 @@ namespace kintex{
         /* Clone function --> function clone is actually the same! */
         InstantiatedFunction *clone() const {return new InstantiatedFunction(*this);}
         /* Result function --> return result function */
-        Value result();
+        Value result(Environment &env);
         /* Display function */
         std::ostream &display(std::ostream &out) const;
         /* Create operation --> should never be reached! */
@@ -120,14 +86,14 @@ namespace kintex{
         /* Default constructor */
         FunctionBase(std::string givenName, size_t argSize): Name(givenName), argumentSize(argSize){}
         /* Result function */
-        Value result(){throw UndefinedName(*this);}
+        Value result(Environment &env){throw UndefinedName(*this);}
         /* Create operation */
         InstantiatedFunction *create(Processor&);
         /* Name function */
         std::string getName() const{ return "function";}
         
         /* Special operator that executes the function */
-        virtual Value operator()(std::vector<Expression> values) = 0;
+        virtual Value operator()(std::vector<Expression> values, Environment &env) = 0;
         /* Special display operator for function */
         virtual std::ostream &display(std::vector<Expression> values, std::ostream &out) const{
             out << name;
@@ -140,9 +106,6 @@ namespace kintex{
             out << ")";
             return out;
         }
-        
-        /* Special set operator --> never reach such sort of set */
-        Operand &operator=(Operand &op) { throw UnreachableException(); }
     protected:
         size_t argumentSize;
     };
@@ -156,22 +119,27 @@ namespace kintex{
         /* Clone function */
         Function *clone() const{return new Function(*this);}
         /* Special result function */
-        Value operator()(std::vector<Expression> values){
+        Value operator()(std::vector<Expression> values, Environment &env){
             //if function not defined return error
             if(typeid(*expr) == typeid(Void)) throw UndefinedName(*this);
             //set arguments to corresponding value
             std::vector<Expression>::iterator argIter = arguments.begin();
             std::vector<Expression>::iterator argValIter = values.begin();
+			//increase scope
+			env.getDynSym().extend(DynamicSymbolTable::FUNCTION);
             for(;argIter < arguments.end(); ++argIter, ++argValIter){
                 //cast token to name (always succeed, because it is a variable)
-				Name &op(dynamic_cast<Name&>((**argIter).getContents()));
+				Variable &op(dynamic_cast<Variable&>((**argIter).getContents()));
                 
                 //evaluate expression and assign result to vars 
-                op = *(*argValIter)->result();
+                op.set(*(*argValIter)->result(env), env);
             }
             
             //return result expression
-            return expr->result();
+            Value ret = expr->result(env);
+			//decrease scope
+			env.getDynSym().reduce();
+			return ret;
         }
     private:
         Expression expr;

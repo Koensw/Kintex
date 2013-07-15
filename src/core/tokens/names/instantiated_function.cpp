@@ -6,7 +6,7 @@
 using namespace kintex;
 
 /* Return result function with argument values set */
-Value InstantiatedFunction::result(){
+Value InstantiatedFunction::result(Environment &env){
     //set correct parent and line for function
     func->parent = getParent();
     func->line = line;
@@ -15,7 +15,7 @@ Value InstantiatedFunction::result(){
         (*iter)->parent = func;
     }
     //execute bound function with argument values if not void
-    return (*func)(argumentValues);
+    return (*func)(argumentValues, env);
 }
 
 /* Display function with arguments */

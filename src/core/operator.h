@@ -6,6 +6,7 @@
 
 #include "token.h"
 #include "interpreter.h"
+#include "operand.h"
 
 namespace kintex{
     

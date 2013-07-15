@@ -6,6 +6,7 @@
 
 #include "token.h"
 #include "exception.h"
+#include "env.h"
 
 namespace kintex{
     class Integer;
@@ -70,7 +71,7 @@ namespace kintex{
         
         /** Result should return copy of itself
          */
-        Value result();
+        Value result(Environment &env);
         
         /** Redefine pure virtual clone to give an operand back --> else VALUE class is not working */
         virtual Operand *clone() const = 0;

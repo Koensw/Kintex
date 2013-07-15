@@ -19,20 +19,22 @@ DivideOperator *DivideOperator::create(Processor &p){
     return new DivideOperator(p.getPrevExpression(pos), p.getNextExpression(pos));
 }
 
-Value DivideOperator::result(){
-    //check if not a zero value righthand
-    if((*children[1]->result() == Integer(0))) throw CalculationError(*this, "Divide by zero is impossible.");
+Value DivideOperator::result(Environment &env){
+	Value leftResult = children[0]->result(env);
+	Value rightResult = children[1]->result(env);
+	
+	//check if not a zero value righthand
+    if((*rightResult == Integer(0))) throw CalculationError(*this, "Divide by zero is impossible.");
 
     //if right hand is float convert lefthand to float too
-    Value leftResult = children[0]->result();
-    Value rightResult = children[1]->result();
     if(typeid(*rightResult) == typeid(FloatingPoint) && typeid(*leftResult) == typeid(Integer)){
         leftResult = FloatingPoint(dynamic_cast<Integer&>(*leftResult));
     }
 
     //if both are integers calculate a check too and return that check if the normal answer is not correct
     if(typeid(*rightResult) == typeid(Integer) && typeid(*leftResult) == typeid(Integer)){
-    	if(children[0]->result()->mod(*rightResult) == Integer(0)){
+		Value cpy = leftResult->clone();
+    	if(cpy->mod(*rightResult) == Integer(0)){
     		*leftResult /= *rightResult;
     		return leftResult;
     	}else{

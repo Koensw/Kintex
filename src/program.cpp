@@ -22,6 +22,7 @@
 #include "core/operand.h"
 #include "core/operator.h"
 #include "core/interpreter.h"
+#include "core/env.h"
 #include "../external/getopt_pp.h"
 
 /* include all core tokens
@@ -49,21 +50,33 @@ enum Mode {INTERACTIVE_MODE,FILE_MODE,DIRECT_MODE};
  */
 
 // add all interactive library functions 
-void addInteractiveLibrary(SymbolTable &table){
-    table.getLevel("base")->addToken(new VersionFunction);
-    table.getLevel("base")->addToken(new HelpFunction);
-    table.getLevel("base")->addToken(new QuitFunction);
+SymbolTable addInteractiveLibrary(){
+	Level baseFunctionLevel("base", Level::Assoc::RIGHT);
+	baseFunctionLevel.addToken(new VersionFunction);
+	baseFunctionLevel.addToken(new HelpFunction);
+	baseFunctionLevel.addToken(new QuitFunction);
+	
+	SymbolTable table(new Void, new Void);
+	table.addLevel(baseFunctionLevel);
+	
+    return table;
 }
 
 // add all default library functions 
-// FIXME: move this to core tokens
-void addDefaultLibrary(SymbolTable &table){
-    table.getLevel("base")->addToken(new PrintFunction);
-    table.getLevel("base")->addToken(new PrintExpressionFunction);
-    table.getLevel("base")->addToken(new ReturnFunction);
-    table.getLevel("base")->addToken(new IfFunction);
-    table.getLevel("base")->addToken(new WhileFunction);
-    table.getLevel("default")->addToken(new SquareRootFunction);
+SymbolTable addDefaultLibrary(){
+	Level baseFunctionLevel("base", Level::Assoc::RIGHT);
+	baseFunctionLevel.addToken(new PrintFunction);
+	baseFunctionLevel.addToken(new PrintExpressionFunction);
+	baseFunctionLevel.addToken(new ReturnFunction);
+	baseFunctionLevel.addToken(new IfFunction);
+	baseFunctionLevel.addToken(new WhileFunction);
+	baseFunctionLevel.addToken(new SquareRootFunction);
+	
+	SymbolTable table(new Void, new Void);
+	table.getLevel("default")->addToken(new SquareRootFunction);
+	table.addLevel(baseFunctionLevel);
+	
+    return table;
 }
 
 //return tokenlist and operand level index (for custom functions)
@@ -117,7 +130,8 @@ SymbolTable getDefaultSymbolTable(){
     table.addLevel(creatorLevel, opit);
     
     /* add default library */
-    addDefaultLibrary(table);
+    SymbolTable deflib = addDefaultLibrary();
+	table.merge(deflib);
     
     return table;
 }
@@ -140,7 +154,7 @@ void error(std::string msg){
 // call this to report critical errors (that should not happen!)
 void critical_error(std::string msg){
     std::cerr << "Critical program error: " <<  msg << std::endl;
-    std::cerr << "The program encountered a condition that could never be reached." << std::endl;
+    std::cerr << "The program encountered a condition that should never be reached." << std::endl;
     std::cerr << "Please report this bug to <kswolters@live.nl>." << std::endl;
     abort();
 }
@@ -207,14 +221,16 @@ bool interactive_mode(){
     
     //build token list (with custom functions)
     SymbolTable tokenList = getDefaultSymbolTable();
-    addInteractiveLibrary(tokenList);
+    SymbolTable interactive = addInteractiveLibrary();
+	tokenList.merge(interactive);
     
 	//set default StatementGroup
 	DefaultStatementGroup *sg = new DefaultStatementGroup;
 	
     //build new interpreter
     Interpreter kintex(tokenList, sg); 
-    
+    Environment env;
+	
     //loop until EOF
     quitInteractive = false;
     while(!std::cin.eof() && !quitInteractive){
@@ -231,7 +247,7 @@ bool interactive_mode(){
             //print all results
             for(Interpreter::StatementList::iterator iter = results.begin(); iter < results.end(); iter++){
                 //execute expression
-                Expression result = iter->result();
+                Expression result = iter->result(env);
                 //print result if not void
                 if(typeid(*result) != typeid(Void)) std::cout << *iter << " = " << result << std::endl;
             }
@@ -269,6 +285,7 @@ bool file_mode(std::ifstream &file, std::string file_name){
     //build new interpreter
     SymbolTable tokenList = getDefaultSymbolTable();
     Interpreter kintex(tokenList, sg);
+	Environment env;
     
     //parse file
     try{
@@ -281,7 +298,7 @@ bool file_mode(std::ifstream &file, std::string file_name){
         //print all results
         for(Interpreter::StatementList::iterator iter = results.begin(); iter < results.end(); iter++){
             //execute expression
-            Expression result = iter->result();
+            Expression result = iter->result(env);
         }
     }catch(ScriptError &e){
         std::cerr << "ScriptError: error while reading script!" << std::endl;
@@ -318,6 +335,7 @@ bool direct_mode(std::string parseString){
     //build new interpreter
     SymbolTable tokenList = getDefaultSymbolTable();
     Interpreter kintex(tokenList, sg);
+	Environment env;
     
     //parse file
     try{
@@ -326,7 +344,7 @@ bool direct_mode(std::string parseString){
         //print all results
         for(Interpreter::StatementList::iterator iter = results.begin(); iter < results.end(); iter++){
             //execute expression
-            Expression result = iter->result();
+            Expression result = iter->result(env);
             //print result (if not void)
             if(typeid(*result) != typeid(Void)) std::cout << result << std::endl;
         }

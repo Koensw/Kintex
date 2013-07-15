@@ -12,6 +12,7 @@ namespace kintex{
     class DynamicToken;
     class Operand;
     class SymbolTable;
+	class Environment;
     
     /* Defines a line of code that is used in processors and token */
 	/* FIXME: rename to Code ?? */
@@ -51,7 +52,7 @@ namespace kintex{
         
         /* Proxy behavious */
         std::ostream &display(std::ostream &out) const;
-        Expression result();
+        Expression result(Environment &env);
     private:
         Expression expr;
     };

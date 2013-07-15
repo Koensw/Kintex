@@ -3,10 +3,8 @@
 
 #include "core/interpreter.h"
 #include "core/table.h"
-#include "core/token.h"
 #include "core/group.h"
-
-//TODO move to include folder!
+#include "core/operand.h"
 
 //change length for between!
 const std::string betweenChars = ";\n";

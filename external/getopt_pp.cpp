@@ -21,10 +21,10 @@ GetOpt_pp:  Yet another C++ version of getopt.
 // $$$ DISABLE ENVIRON
 /*#if __APPLE__
 #include <crt_externs.h>
-#define environ (*_NSGetEnviron())
+#define &environ (*_NSGetEnviron())
 #elif _WIN32
 #include <Stdio.h>
-#define environ _environ
+#define &environ _environ
 #else
 #include <unistd.h>
 #endif*/
@@ -120,7 +120,7 @@ GETOPT_INLINE void GetOpt_pp::_parse(int argc, const char* const* const argv)
     _last = _Option::OK;    // TODO: IMPROVE!!
 }
 
-GETOPT_INLINE void GetOpt_pp::_parse_env()
+GETOPT_INLINE void GetOpt_pp::_parse_result()
 {
 	// $$$ DISABLE ENV $$$
     // this will be optimized in version 3
@@ -130,9 +130,9 @@ GETOPT_INLINE void GetOpt_pp::_parse_env()
     std::string::size_type pos;
     OptionData* data;
 
-    while (environ[var] != NULL)
+    while (&environ[var] != NULL)
     {
-        var_name = environ[var];
+        var_name = &environ[var];
         pos = var_name.find('=');
 
         if (pos != std::string::npos)
@@ -168,7 +168,7 @@ GETOPT_INLINE GetOpt_pp::GetOpt_pp(int argc, const char* const* const argv, _Env
 {
     _init_flags();
     _parse(argc, argv);
-    _parse_env();
+    _parse_result();
 }
 
 GETOPT_INLINE GetOpt_pp::~GetOpt_pp()

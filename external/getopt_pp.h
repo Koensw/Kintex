@@ -532,7 +532,7 @@ class GetOpt_pp
     GETOPT_INLINE Token* _add_token(const std::string& value, Token::Type type);
     GETOPT_INLINE void _init_flags();
     GETOPT_INLINE void _parse(int argc, const char* const* const argv);
-    GETOPT_INLINE void _parse_env();
+    GETOPT_INLINE void _parse_result();
 public:
     GETOPT_INLINE GetOpt_pp(int argc, const char* const* const argv);
     GETOPT_INLINE GetOpt_pp(int argc, const char* const* const argv, _EnvTag);

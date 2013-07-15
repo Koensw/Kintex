@@ -20,10 +20,10 @@ BiggerOperator *BiggerOperator::create(Processor &p){
     return new BiggerOperator(p.getPrevExpression(pos), p.getNextExpression(pos), eq);
 }
 
-Value BiggerOperator::result(){
+Value BiggerOperator::result(Environment &env){
     //if right hand is float convert lefthand to float too
-    Value left = children[0]->result();
-	Value right = children[1]->result();
+    Value left = children[0]->result(env);
+	Value right = children[1]->result(env);
     if(*left < *right || (!equal && *left == *right)) return Integer(0, this);
     else return Integer(1, this);
 }

@@ -1,15 +1,14 @@
+#include <typeinfo>
+
 #include "name.h"
 #include "exception.h"
+#include "tokens/operands/operands.h"
+#include "env.h"
 
 using namespace kintex;
 
-/* DynamicToken unreachable declarations */
-std::ostream &DynamicToken::display(std::ostream&) const { throw UnreachableException(); }
-std::string DynamicToken::getName() const { throw UnreachableException(); }
-Token &DynamicToken::getContents() { throw UnreachableException(); }
-
 /* Creator unreachable declarations */
-Value Creator::result(){
+Value Creator::result(Environment &env){
 	throw UnreachableException();
 }
 std::ostream &Creator::display(std::ostream &out) const{

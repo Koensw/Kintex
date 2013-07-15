@@ -38,11 +38,11 @@ bool ParenthesesOperator::poll(Processor &p){
 	return (p.getChar() == ')' || p.getChar() == ',');
 }
 
-Value ParenthesesOperator::result(){
+Value ParenthesesOperator::result(Environment &env){
     //set parent of child to parent of parentheses operator (because this parentheses operator should not exist for the user!)
     children[0]->parent = getParent();
     //simply return containing expression
-    return children[0]->result();
+    return children[0]->result(env);
 }
 
 /* Special display operator */

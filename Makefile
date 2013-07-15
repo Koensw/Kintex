@@ -47,7 +47,7 @@ build/%.o : %.cpp
 # clean operation
 clean :
 	-rm -rf build/*
-	find ./ -name '*~' | xargs rm
+	find ./ -name '*~' | xargs rm -f
 
 # install operation
 install:
