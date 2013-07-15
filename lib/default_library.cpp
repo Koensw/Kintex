@@ -22,6 +22,44 @@ Value ReturnFunction::operator()(std::vector<Expression> values, Environment &en
     return Void(getParent());
 }
 
+/* 
+ * Deletes the first symbol with the given name
+ * Returns: void
+ */
+Value DeleteFunction::operator()(std::vector<Expression> values, Environment &env){
+	Expression expr = values[0];
+	
+	if(typeid(*expr) == typeid(Variable)){
+		Variable &var = dynamic_cast<Variable&>(*values[0]);
+		
+		//real runtime removal
+		env.getDynSym().removeToken(var.getId());
+		return Void(getParent());
+	}
+	
+	try{
+		InstantiatedFunction &func = dynamic_cast<InstantiatedFunction&>(*values[0]);
+		
+		//FIXME: find a better way to do this
+		for(SymbolTable::iterator iter = env.getSym().begin(); iter != env.getSym().end(); ++iter){
+			for(Level::iterator iter2 = iter->begin(); iter2 != iter->end(); ++iter2){
+				try{
+					Function &func2 = dynamic_cast<Function&>(**iter2);
+					if(func.getId() == func2.getId()){
+						iter->removeToken(iter2);
+						break;
+					}
+				}catch(std::bad_cast) {}
+			}
+		}
+		
+		//interpret time removal
+		return Void(getParent());
+	}catch(std::bad_cast) {}
+	
+	throw UnsupportedOperation(*expr, values);
+}
+
 /*
  * Check if first parameter is true, then execute second statement
  * Returns: void

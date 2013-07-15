@@ -68,6 +68,7 @@ SymbolTable addDefaultLibrary(){
 	baseFunctionLevel.addToken(new PrintFunction);
 	baseFunctionLevel.addToken(new PrintExpressionFunction);
 	baseFunctionLevel.addToken(new ReturnFunction);
+	baseFunctionLevel.addToken(new DeleteFunction);
 	baseFunctionLevel.addToken(new IfFunction);
 	baseFunctionLevel.addToken(new WhileFunction);
 	baseFunctionLevel.addToken(new SquareRootFunction);
@@ -229,7 +230,7 @@ bool interactive_mode(){
 	
     //build new interpreter
     Interpreter kintex(tokenList, sg); 
-    Environment env;
+    Environment env(tokenList);
 	
     //loop until EOF
     quitInteractive = false;
@@ -285,7 +286,7 @@ bool file_mode(std::ifstream &file, std::string file_name){
     //build new interpreter
     SymbolTable tokenList = getDefaultSymbolTable();
     Interpreter kintex(tokenList, sg);
-	Environment env;
+	Environment env(tokenList);
     
     //parse file
     try{
@@ -335,7 +336,7 @@ bool direct_mode(std::string parseString){
     //build new interpreter
     SymbolTable tokenList = getDefaultSymbolTable();
     Interpreter kintex(tokenList, sg);
-	Environment env;
+	Environment env(tokenList);
     
     //parse file
     try{

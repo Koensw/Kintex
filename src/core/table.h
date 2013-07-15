@@ -41,6 +41,7 @@ namespace kintex{
         
         /* Add a token after */
         void addToken(Expression expr);
+		void removeToken(iterator iter);
         
         /* Merge tokens from other level */
         void merge(iterator begin, iterator end);

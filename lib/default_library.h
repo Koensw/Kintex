@@ -28,6 +28,18 @@ public:
     kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
 };
 
+//delete static and dynamic symbols
+class DeleteFunction: public kintex::FunctionBase{
+public:
+    DeleteFunction(): kintex::FunctionBase("delete", 1) {}
+    DeleteFunction *clone() const{ return new DeleteFunction(*this); }
+    
+    std::string getName() const{ return "delete";}
+    
+    kintex::Value operator()(std::vector<kintex::Expression>, kintex::Environment &env);
+};
+
+
 /** Comparision functions */
 //if first argument is true, execute second
 class IfFunction: public kintex::FunctionBase{

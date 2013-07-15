@@ -23,7 +23,8 @@ namespace kintex{
             return out;
         }
         
-        /* Special set-operator for names */
+        /* Returns name */
+	    std::string getId() { return name; }
     protected:
         std::string name;
     };
@@ -38,9 +39,9 @@ namespace kintex{
 		
 		/** Redefine pure virtual */
 		virtual DynamicToken *clone() const = 0;
+
+        /* Special set-operator for names */
 		virtual Operand &set(Operand &op, Environment &env) = 0;
-		
-	    std::string getId() { return name; }
 	public:
         Expression val;
     };
@@ -57,6 +58,7 @@ namespace kintex{
         std::ostream &display(std::ostream &out) const;
         
         /* Get registered name */
+		//FIXME: find better way
         std::string getLevelName() {return name;}
     private:
     	std::string name;

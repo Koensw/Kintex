@@ -162,10 +162,10 @@ namespace kintex{
     public:
         /* Default constructor */
         ExecError(const Token &givenError, Environment ev): error(givenError), env(ev) {}
-        ExecError(const Token &givenError): error(givenError), env(Environment()) {}
+        ExecError(const Token &givenError): error(givenError) {}
         /* Default pointer (for parents) constructor */
         ExecError(Token *givenError, Environment ev): error(givenError), env(ev) {}
-        ExecError(Token *givenError): error(givenError), env(Environment()) {}
+        ExecError(Token *givenError): error(givenError) {}
         
         /* Returns expression */
         virtual std::string getExpressionString() const {
@@ -199,6 +199,7 @@ namespace kintex{
     public:
         /* Get result of children, because after construction this error should be fully constant (no other exception could be thrown) */
         UnsupportedOperation(const Token &child);
+		UnsupportedOperation(const Token &child, std::vector<Expression> vals): ExecError(child.getParent()->clone()), children(vals) {}
         
         /* Message thrown */
         std::string what() const throw();

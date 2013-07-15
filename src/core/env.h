@@ -19,11 +19,14 @@
 namespace kintex{  
     class Environment{
     public:
-    	Environment() {}
+		Environment(): symRef(0) {}
+    	Environment(SymbolTable &sr): symRef(&sr) {}
     	
+    	SymbolTable &getSym();
     	DynamicSymbolTable &getDynSym() {return dynsym;}
     private:
-    	 DynamicSymbolTable dynsym;
+		SymbolTable *symRef;
+		DynamicSymbolTable dynsym;
     };
 }
 

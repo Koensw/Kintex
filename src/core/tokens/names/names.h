@@ -50,6 +50,7 @@ namespace kintex{
     
     /* Instance of a function */
     class FunctionBase;
+	
     class InstantiatedFunction: public Token{
         friend class SetOperator;
     public:
@@ -69,6 +70,8 @@ namespace kintex{
         std::string getName() const{ return "function instance";}
         /* Get contents returns the associated function */
         Token &getContents();
+		/* Returns name */
+	    std::string getId(); 
     private:
         FunctionBase *func;
         std::vector<Expression> argumentValues;

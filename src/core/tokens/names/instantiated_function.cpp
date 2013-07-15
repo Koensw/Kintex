@@ -28,3 +28,7 @@ std::ostream &InstantiatedFunction::display(std::ostream &out) const{
 Token &InstantiatedFunction::getContents(){
     return *func;
 }
+
+std::string InstantiatedFunction::getId(){ 
+	return func->getId(); 
+}

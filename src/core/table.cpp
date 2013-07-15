@@ -20,6 +20,10 @@ void Level::merge(Level::iterator beg, Level::iterator end){
 	}
 }
 
+void Level::removeToken(Level::iterator iter){
+	tokenList.erase(iter);
+}
+
 /* Build new symbol table */
 SymbolTable::SymbolTable(Token *vd, Token *tok): mx_ind(1e6){
 	//create a zero level
@@ -125,7 +129,13 @@ void DynamicSymbolTable::addToken(DynamicExpression expr, bool red){
 }
 //TODO: implement
 void DynamicSymbolTable::removeToken(std::string id){
-	return;
+	for(auto iter = dynsym.rbegin(); iter != dynsym.rend(); ++iter){
+		auto chk = iter->find(id);
+		if(chk != iter->end()) {
+			iter->erase(chk);
+			return;
+		}
+	}
 }
 
 void DynamicSymbolTable::extend(Scope scp){
