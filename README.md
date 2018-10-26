@@ -1,7 +1,8 @@
 KINTEX 
 ======
 
-VERSIE: 2.0
+VERSION: 2.1  
+LICENSE: MIT
 
 (c) 2013 Koen Wolters
 
@@ -19,7 +20,7 @@ Kintex is a simple interpreter written in C++. It has the following features (at
 * Support for informative errors
 * Few builtin functions
 
-Kintex is a project for me to learn programming more advanced things and to learn something about compiler/interpreter logic.
+Kintex was a project for me to learn programming more advanced things and to learn something about compiler/interpreter logic.
 
 DOCUMENTATION
 -------------
