@@ -26,10 +26,6 @@ DOCUMENTATION
 
 Documentation is not yet written!
 
-DEVELOPMENT AND KNOWN ISSUES
-----------------------------
-Read docs/plannen.doc
-
 INSTALL
 -------
 
